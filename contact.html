@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact — Décrivez-moi votre projet | Alon Marec</title>
+  <meta name="description" content="Contactez Alon Marec, architecte d'intérieur à Paris et Levallois-Perret. Formulaire de projet, e-mail, téléphone et WhatsApp. Réponse sous 48 h." />
+  <link rel="canonical" href="https://alonmarec-interiors.fr/contact.html" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Aller au contenu</a>
+  <header class="site-header" id="top">
+    <div class="container header-inner">
+      <a href="index.html" class="logo"><span class="logo-mark" aria-hidden="true"></span>Alon<span class="logo-accent">Marec</span></a>
+      <nav class="nav" aria-label="Navigation principale">
+        <button class="nav-toggle" aria-expanded="false" aria-controls="nav-menu" aria-label="Ouvrir le menu"><span></span><span></span><span></span></button>
+        <ul class="nav-menu" id="nav-menu">
+          <li><a href="projets.html">Projets</a></li>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="a-propos.html">À propos</a></li>
+          <li><a href="methode.html">Méthode</a></li>
+          <li><a href="tarifs.html">Tarifs</a></li>
+          <li><a href="faq.html">FAQ</a></li>
+          <li><a href="contact.html" class="nav-cta" aria-current="page">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="page-head">
+      <div class="container">
+        <nav class="breadcrumb" aria-label="Fil d'Ariane"><a href="index.html">Accueil</a> / Contact</nav>
+        <h1>Décrivez-moi votre projet</h1>
+        <p>Ces premières informations me permettront d'étudier votre demande et de vous proposer une prestation adaptée. Réponse sous 48 h.</p>
+      </div>
+    </div>
+
+    <section class="section">
+      <div class="container contact-inner">
+        <!-- Coordonnées -->
+        <div class="reveal">
+          <p class="eyebrow">Me joindre</p>
+          <h2 class="section-title" style="font-size:1.6rem;">Directement</h2>
+          <ul class="contact-info">
+            <li><span>E-mail</span><a href="mailto:contact@alonmarec-interiors.fr">contact@alonmarec-interiors.fr</a></li>
+            <li><span>Téléphone</span><a href="tel:+33600000000">+33 6 00 00 00 00</a></li>
+            <li><span>WhatsApp</span><a href="https://wa.me/33600000000" target="_blank" rel="noopener">Écrire sur WhatsApp</a></li>
+            <li><span>Instagram</span><a href="https://www.instagram.com/" target="_blank" rel="noopener">@alonmarec.interiors</a></li>
+            <li><span>Zone d'intervention</span>Paris, Levallois-Perret &amp; à distance</li>
+          </ul>
+        </div>
+
+        <!-- Formulaire -->
+        <form class="form reveal" id="contact-form" novalidate>
+          <div class="form-row">
+            <div class="field"><label for="nom">Nom et prénom <span class="req">*</span></label><input type="text" id="nom" name="nom" autocomplete="name" required /></div>
+            <div class="field"><label for="email">E-mail <span class="req">*</span></label><input type="email" id="email" name="email" autocomplete="email" required /></div>
+          </div>
+          <div class="form-row">
+            <div class="field"><label for="tel">Téléphone</label><input type="tel" id="tel" name="tel" autocomplete="tel" /></div>
+            <div class="field">
+              <label for="client">Type de client</label>
+              <select id="client" name="client"><option value="">— Choisir —</option><option>Particulier</option><option>Professionnel</option></select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="field">
+              <label for="bien">Type de bien</label>
+              <select id="bien" name="bien"><option value="">— Choisir —</option><option>Appartement</option><option>Maison</option><option>Commerce</option><option>Restaurant</option><option>Bureau</option><option>Autre</option></select>
+            </div>
+            <div class="field"><label for="ville">Ville</label><input type="text" id="ville" name="ville" /></div>
+          </div>
+          <div class="form-row">
+            <div class="field"><label for="surface">Surface approximative (m²)</label><input type="number" id="surface" name="surface" min="0" /></div>
+            <div class="field"><label for="pieces">Pièces concernées</label><input type="text" id="pieces" name="pieces" placeholder="ex. séjour, cuisine, chambre" /></div>
+          </div>
+          <div class="field">
+            <label for="nature">Nature du projet</label>
+            <select id="nature" name="nature">
+              <option value="">— Choisir —</option>
+              <option>Rénovation complète</option>
+              <option>Réaménagement d'une pièce</option>
+              <option>Cuisine</option>
+              <option>Salle de bains</option>
+              <option>Appartement</option>
+              <option>Maison</option>
+              <option>Commerce</option>
+              <option>Restaurant</option>
+              <option>Bureau</option>
+              <option>Rendus 3D</option>
+              <option>Plans techniques</option>
+              <option>Valorisation immobilière</option>
+              <option>Autre</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <div class="field">
+              <label for="stade">Stade du projet</label>
+              <select id="stade" name="stade"><option value="">— Choisir —</option><option>Simple réflexion</option><option>Projet défini</option><option>Travaux imminents</option></select>
+            </div>
+            <div class="field">
+              <label for="plan">Disposez-vous d'un plan coté ?</label>
+              <select id="plan" name="plan"><option value="">— Choisir —</option><option>Oui</option><option>Non</option><option>Partiellement</option></select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="field"><label for="budget-travaux">Budget travaux estimé</label><input type="text" id="budget-travaux" name="budget-travaux" placeholder="ex. 15 000 €" /></div>
+            <div class="field"><label for="budget-conception">Budget prévu pour la conception</label><input type="text" id="budget-conception" name="budget-conception" placeholder="ex. 1 500 €" /></div>
+          </div>
+          <div class="field"><label for="date">Date souhaitée</label><input type="date" id="date" name="date" /></div>
+          <div class="field">
+            <label for="fichiers">Joindre des fichiers (plan, photos, inspirations, devis)</label>
+            <input type="file" id="fichiers" name="fichiers" multiple accept=".pdf,.jpg,.jpeg,.png,.webp,.heic" />
+            <p class="field-hint">PDF, images. Vous pourrez aussi m'envoyer vos fichiers par e-mail après ce premier contact.</p>
+          </div>
+          <div class="field"><label for="message">Message <span class="req">*</span></label><textarea id="message" name="message" required placeholder="Décrivez votre projet, vos envies et vos contraintes…"></textarea></div>
+
+          <label class="checkbox"><input type="checkbox" id="consent" name="consent" required /> <span>J'accepte que mes informations soient utilisées pour être recontacté au sujet de ma demande. <span class="req">*</span></span></label>
+          <p class="rgpd-note">Vos données ne sont utilisées que pour répondre à votre demande et ne sont jamais cédées à des tiers. Vous pouvez exercer vos droits d'accès, de rectification et de suppression en écrivant à <a href="mailto:contact@alonmarec-interiors.fr">contact@alonmarec-interiors.fr</a>. En savoir plus : <a href="politique-confidentialite.html">politique de confidentialité</a>.</p>
+
+          <button type="submit" class="btn btn-primary btn-block">Envoyer ma demande</button>
+          <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand"><a href="index.html" class="logo">Alon<span class="logo-accent">Marec</span></a><p>Conception d'intérieur, plans &amp; visualisation 3D. Paris, Levallois-Perret et à distance.</p></div>
+        <div class="footer-col"><h4>Navigation</h4><a href="projets.html">Projets</a><a href="services.html">Services</a><a href="a-propos.html">À propos</a><a href="methode.html">Méthode</a></div>
+        <div class="footer-col"><h4>Contact</h4><a href="tarifs.html">Tarifs</a><a href="faq.html">FAQ</a><a href="contact.html">Me contacter</a><a href="mailto:contact@alonmarec-interiors.fr">contact@alonmarec-interiors.fr</a></div>
+      </div>
+      <div class="footer-bottom"><p>© <span id="year"></span> Alon Marec. Tous droits réservés.</p><nav class="footer-legal" aria-label="Liens légaux"><a href="mentions-legales.html">Mentions légales</a><a href="politique-confidentialite.html">Confidentialité &amp; cookies</a></nav></div>
+    </div>
+  </footer>
+  <a class="wa-float" href="https://wa.me/33600000000" target="_blank" rel="noopener" aria-label="Contacter sur WhatsApp"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.5 14.4c-.3-.2-1.7-.8-2-.9-.3-.1-.5-.2-.7.2-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-.3-.2-1.2-.5-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5 0-.1-.7-1.6-.9-2.2-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.2.2 2.1 3.2 5.1 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.3zM12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.4 1.3 4.9L2 22l5.3-1.4c1.4.8 3 1.2 4.7 1.2 5.5 0 10-4.5 10-10S17.5 2 12 2z"/></svg></a>
+  <div class="cookie-banner" id="cookie-banner" role="dialog" aria-live="polite" aria-label="Gestion des cookies"><p>Ce site utilise uniquement des cookies nécessaires à son fonctionnement. En savoir plus dans la <a href="politique-confidentialite.html">politique de confidentialité</a>.</p><div class="cookie-actions"><button class="btn btn-primary" data-cookie="accepted" type="button">Accepter</button><button class="btn btn-ghost" data-cookie="refused" type="button">Refuser</button></div></div>
+  <script src="js/main.js" defer></script>
+</body>
+</html>

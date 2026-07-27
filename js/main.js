@@ -1,16 +1,18 @@
-/* Atelier Archi — interactions légères, sans dépendance. */
+/* Alon Marec — Architecture d'intérieur
+   Interactions légères, sans dépendance. */
 (function () {
   "use strict";
 
-  /* ---- Année du footer ---- */
+  var prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---- Année ---- */
   var yearEl = document.getElementById("year");
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
-  /* ---- Header : ombre au scroll ---- */
+  /* ---- Header : bordure au scroll ---- */
   var header = document.querySelector(".site-header");
   function onScroll() {
-    if (!header) return;
-    header.classList.toggle("is-scrolled", window.scrollY > 8);
+    if (header) header.classList.toggle("is-scrolled", window.scrollY > 8);
   }
   window.addEventListener("scroll", onScroll, { passive: true });
   onScroll();
@@ -34,18 +36,15 @@
 
   /* ---- Apparition au scroll ---- */
   var reveals = document.querySelectorAll(".reveal");
-  if ("IntersectionObserver" in window && reveals.length) {
-    var io = new IntersectionObserver(
-      function (entries) {
-        entries.forEach(function (entry) {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("is-visible");
-            io.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.12, rootMargin: "0px 0px -8% 0px" }
-    );
+  if ("IntersectionObserver" in window && reveals.length && !prefersReduced) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible");
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: "0px 0px -8% 0px" });
     reveals.forEach(function (el) { io.observe(el); });
   } else {
     reveals.forEach(function (el) { el.classList.add("is-visible"); });
@@ -53,87 +52,105 @@
 
   /* ---- Compteurs animés ---- */
   var counters = document.querySelectorAll(".stat-num");
-  var prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
   function animateCount(el) {
     var target = parseInt(el.getAttribute("data-count"), 10) || 0;
     var suffix = el.getAttribute("data-suffix") || "";
-    if (prefersReduced) {
-      el.textContent = target + suffix;
-      return;
-    }
-    var duration = 1400;
-    var start = null;
+    if (prefersReduced) { el.textContent = target + suffix; return; }
+    var duration = 1400, start = null;
     function step(ts) {
       if (start === null) start = ts;
-      var progress = Math.min((ts - start) / duration, 1);
-      var eased = 1 - Math.pow(1 - progress, 3);
+      var p = Math.min((ts - start) / duration, 1);
+      var eased = 1 - Math.pow(1 - p, 3);
       el.textContent = Math.round(target * eased) + suffix;
-      if (progress < 1) requestAnimationFrame(step);
+      if (p < 1) requestAnimationFrame(step);
     }
     requestAnimationFrame(step);
   }
-
   if ("IntersectionObserver" in window && counters.length) {
-    var co = new IntersectionObserver(
-      function (entries) {
-        entries.forEach(function (entry) {
-          if (entry.isIntersecting) {
-            animateCount(entry.target);
-            co.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.5 }
-    );
+    var co = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) { animateCount(entry.target); co.unobserve(entry.target); }
+      });
+    }, { threshold: 0.5 });
     counters.forEach(function (el) { co.observe(el); });
   } else {
     counters.forEach(animateCount);
   }
 
-  /* ---- Formulaire de contact (validation côté client) ---- */
-  var form = document.getElementById("contact-form");
-  var status = document.getElementById("form-status");
-
-  function setError(field, on) {
-    var wrapper = field.closest(".field");
-    if (wrapper) wrapper.classList.toggle("has-error", on);
+  /* ---- Filtres projets ---- */
+  var filterBtns = document.querySelectorAll(".filter-btn");
+  var projectCards = document.querySelectorAll("[data-category]");
+  if (filterBtns.length && projectCards.length) {
+    filterBtns.forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var cat = btn.getAttribute("data-filter");
+        filterBtns.forEach(function (b) { b.classList.toggle("is-active", b === btn); });
+        projectCards.forEach(function (card) {
+          var show = cat === "all" || card.getAttribute("data-category") === cat;
+          card.classList.toggle("hidden", !show);
+        });
+      });
+    });
   }
 
-  if (form) {
+  /* ---- Accordéon FAQ ---- */
+  var faqQuestions = document.querySelectorAll(".faq-q");
+  faqQuestions.forEach(function (q) {
+    q.addEventListener("click", function () {
+      var expanded = q.getAttribute("aria-expanded") === "true";
+      var answer = document.getElementById(q.getAttribute("aria-controls"));
+      q.setAttribute("aria-expanded", String(!expanded));
+      if (answer) answer.style.maxHeight = expanded ? null : answer.scrollHeight + "px";
+    });
+  });
+
+  /* ---- Formulaire de contact ---- */
+  var form = document.getElementById("contact-form");
+  var status = document.getElementById("form-status");
+  function setError(field, on) {
+    var w = field.closest(".field");
+    if (w) w.classList.toggle("has-error", on);
+  }
+  if (form && status) {
     form.addEventListener("submit", function (e) {
       e.preventDefault();
-      var name = form.name;
-      var email = form.email;
-      var message = form.message;
+      var required = form.querySelectorAll("[required]");
       var valid = true;
-
-      [name, email, message].forEach(function (f) {
-        var empty = !f.value.trim();
+      required.forEach(function (f) {
+        var empty = f.type === "checkbox" ? !f.checked : !f.value.trim();
         setError(f, empty);
         if (empty) valid = false;
       });
-
-      var emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim());
-      if (email.value.trim() && !emailOk) {
-        setError(email, true);
-        valid = false;
+      var email = form.querySelector('input[type="email"]');
+      if (email && email.value.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())) {
+        setError(email, true); valid = false;
       }
-
       if (!valid) {
-        status.textContent = "Merci de remplir correctement tous les champs.";
+        status.textContent = "Merci de compléter les champs obligatoires.";
         status.className = "form-status is-error";
         return;
       }
-
-      // Démo : pas de backend. On simule un envoi réussi.
-      status.textContent = "Merci ! Votre message a bien été envoyé. Nous vous répondons sous 48 h.";
+      status.textContent = "Merci ! Votre demande a bien été envoyée. Je vous réponds sous 48 h.";
       status.className = "form-status is-ok";
       form.reset();
     });
-
     form.addEventListener("input", function (e) {
       if (e.target.closest(".field")) setError(e.target, false);
+    });
+  }
+
+  /* ---- Bandeau cookies ---- */
+  var banner = document.getElementById("cookie-banner");
+  if (banner) {
+    var KEY = "am_cookie_choice";
+    var stored = null;
+    try { stored = window.localStorage.getItem(KEY); } catch (e) {}
+    if (!stored) banner.classList.add("is-visible");
+    banner.addEventListener("click", function (e) {
+      var choice = e.target.getAttribute && e.target.getAttribute("data-cookie");
+      if (!choice) return;
+      try { window.localStorage.setItem(KEY, choice); } catch (err) {}
+      banner.classList.remove("is-visible");
     });
   }
 })();
