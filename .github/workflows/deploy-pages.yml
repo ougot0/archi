@@ -26,6 +26,8 @@ jobs:
 
       - name: Configurer Pages (active Pages si nécessaire)
         uses: actions/configure-pages@v5
+        with:
+          enablement: true
 
       - name: Empaqueter le site
         uses: actions/upload-pages-artifact@v3
