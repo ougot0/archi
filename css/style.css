@@ -1,18 +1,19 @@
 /* ==========================================================================
-   Alon Marec — Architecture d'intérieur
+   AM Studio — Architecture d'intérieur
    Conception d'intérieur, plans & visualisation 3D
    Feuille de style partagée · sobre, contemporaine, grandes images.
    ========================================================================== */
 
 :root {
-  --bg: #f7f5f1;          /* blanc cassé */
-  --bg-muted: #efece6;
-  --ink: #211d17;         /* noyer très foncé */
-  --ink-soft: #57524a;
-  --line: #dcd6cc;
-  --accent: #b8734a;      /* terracotta discret */
-  --accent-dark: #9c5c37;
-  --dark: #17140f;
+  --bg: #f3f1ec;          /* ivoire / blanc cassé */
+  --bg-muted: #e8e4db;    /* ivoire plus profond */
+  --ink: #16130f;         /* brun très foncé, presque noir */
+  --ink-soft: #5b544a;    /* brun grisé */
+  --line: #d8d1c4;
+  --accent: #95744b;      /* bronze discret */
+  --accent-dark: #7b5d3a; /* bronze foncé */
+  --walnut: #4a3829;      /* noyer */
+  --dark: #15110c;        /* espresso, presque noir */
   --white: #ffffff;
   --ok: #2f8f5b;
   --err: #cf5140;
@@ -63,7 +64,7 @@ ul { margin: 0; padding: 0; list-style: none; }
   font-size: 0.76rem; letter-spacing: 0.22em; text-transform: uppercase;
   color: var(--accent); font-weight: 600; margin: 0 0 1rem;
 }
-.eyebrow--light { color: #e0b79c; }
+.eyebrow--light { color: #c7ad86; }
 
 /* ---------- Buttons ---------- */
 .btn {
@@ -95,13 +96,15 @@ ul { margin: 0; padding: 0; list-style: none; }
   display: flex; align-items: center; justify-content: space-between; height: 70px;
 }
 .logo {
-  font-size: 1.15rem; font-weight: 700; letter-spacing: -0.01em;
-  display: inline-flex; align-items: center; gap: 0.55rem;
+  font-size: 1.05rem; font-weight: 600; letter-spacing: 0.02em;
+  display: inline-flex; align-items: center; gap: 0.6rem; text-transform: uppercase;
 }
-.logo-mark {
-  width: 13px; height: 13px; border: 2px solid var(--accent);
-  transform: rotate(45deg); display: inline-block;
+.logo-monogram {
+  display: inline-grid; place-items: center; width: 30px; height: 30px;
+  background: var(--ink); color: var(--bg); border-radius: 3px;
+  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.03em;
 }
+.logo-word { font-weight: 500; letter-spacing: 0.16em; }
 .logo-accent { color: var(--accent); }
 
 .nav { display: flex; align-items: center; }
@@ -135,8 +138,8 @@ ul { margin: 0; padding: 0; list-style: none; }
 .hero-bg {
   position: absolute; inset: 0; z-index: 0;
   background:
-    linear-gradient(180deg, rgba(23,20,15,0.15) 0%, rgba(23,20,15,0.72) 100%),
-    linear-gradient(135deg, #b58b63 0%, #6d4d33 55%, #3c2c1e 100%);
+    linear-gradient(180deg, rgba(21,17,12,0.28) 0%, rgba(21,17,12,0.84) 100%),
+    linear-gradient(135deg, #5a4632 0%, #362a1d 55%, #1b1510 100%);
   background-size: cover; background-position: center;
 }
 .hero-inner {
@@ -221,12 +224,12 @@ ul { margin: 0; padding: 0; list-style: none; }
   content: ""; position: absolute; inset: 0;
   background: linear-gradient(160deg, transparent 40%, rgba(23,20,15,0.28));
 }
-.project-media--a { background-image: linear-gradient(135deg, #c9a97f, #8a6b4a); }
-.project-media--b { background-image: linear-gradient(135deg, #8fa1a8, #4c5f66); }
-.project-media--c { background-image: linear-gradient(135deg, #c98f70, #7a4b34); }
-.project-media--d { background-image: linear-gradient(135deg, #a7ad9a, #5f6552); }
-.project-media--e { background-image: linear-gradient(135deg, #d0b8a0, #9a7d63); }
-.project-media--f { background-image: linear-gradient(135deg, #9c9aa6, #565463); }
+.project-media--a { background-image: linear-gradient(135deg, #6b5138, #382a1d); } /* noyer */
+.project-media--b { background-image: linear-gradient(135deg, #b7afa1, #6f685c); } /* greige */
+.project-media--c { background-image: linear-gradient(135deg, #3c332b, #191512); } /* espresso */
+.project-media--d { background-image: linear-gradient(135deg, #8f887c, #4c473f); } /* pierre */
+.project-media--e { background-image: linear-gradient(135deg, #a5824f, #6b4f2e); } /* bronze */
+.project-media--f { background-image: linear-gradient(135deg, #4a4744, #201e1c); } /* anthracite */
 .project-body { padding: 1.4rem 1.5rem 1.6rem; }
 .project-tag {
   display: inline-block; font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase;
@@ -284,7 +287,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 
 /* ---------- À propos ---------- */
 .about-inner { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: clamp(2rem, 6vw, 4rem); align-items: center; }
-.about-photo { aspect-ratio: 4 / 5; border-radius: var(--radius); background: linear-gradient(160deg, rgba(23,20,15,0.1), rgba(23,20,15,0.35)), linear-gradient(135deg, #b58b63, #6d4d33); }
+.about-photo { aspect-ratio: 4 / 5; border-radius: var(--radius); background: linear-gradient(160deg, rgba(21,17,12,0.15), rgba(21,17,12,0.42)), linear-gradient(135deg, #6b5138, #362a1d); }
 .about-content .section-title { margin-bottom: 1.25rem; }
 .about-content p { color: var(--ink-soft); }
 .chips { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1.5rem 0; }
@@ -379,7 +382,8 @@ ul { margin: 0; padding: 0; list-style: none; }
 /* ---------- Footer ---------- */
 .site-footer { background: var(--dark); color: #b8b1a5; padding-top: 3rem; }
 .footer-top { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 2rem; padding-bottom: 2.5rem; }
-.footer-brand .logo { color: var(--bg); font-size: 1.15rem; }
+.footer-brand .logo { color: var(--bg); font-size: 1.05rem; }
+.site-footer .logo-monogram { background: var(--accent); color: var(--dark); }
 .footer-brand p { margin-top: 1rem; max-width: 34ch; font-size: 0.92rem; }
 .footer-col h4 { font-size: 0.78rem; letter-spacing: 0.14em; text-transform: uppercase; color: #8f887c; margin-bottom: 1rem; }
 .footer-col a { display: block; padding: 0.28rem 0; font-size: 0.92rem; color: #b8b1a5; }

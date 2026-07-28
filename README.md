@@ -1,4 +1,4 @@
-# Alon Marec — Architecture d'intérieur
+# AM Studio — Architecture d'intérieur
 
 Site vitrine multi-pages pour un professionnel de l'architecture d'intérieur :
 **conception d'intérieur, plans & visualisation 3D**. 100 % statique
@@ -45,11 +45,11 @@ python3 -m http.server 8000   # puis http://localhost:8000
 
 Le contenu est un **modèle réaliste** ; remplacez les valeurs d'exemple :
 
-- **Nom / marque** : « Alon Marec » (déduit de votre exemple d'e-mail) — à confirmer.
-- **Coordonnées** : e-mail `contact@alonmarec-interiors.fr`, téléphone et
-  WhatsApp `+33 6 00 00 00 00`, Instagram `@alonmarec.interiors` — tous des
-  placeholders. Cherchez `33600000000`, `alonmarec-interiors.fr` et
-  `alonmarec.interiors` pour les remplacer.
+- **Nom / marque** : « AM Studio » (déduit de votre exemple d'e-mail) — à confirmer.
+- **Coordonnées** : e-mail `contact@am-studio.fr`, téléphone et
+  WhatsApp `+33 6 00 00 00 00`, Instagram `@amstudio` — tous des
+  placeholders. Cherchez `33600000000`, `am-studio.fr` et
+  `amstudio` pour les remplacer.
 - **Projets** : remplacez les projets d'exemple par vos vrais projets et
   indiquez honnêtement leur statut (réalisé, client, étude, concept, 3D).
 - **Images** : les visuels sont des **dégradés CSS** (placeholders). Remplacez-les
@@ -58,7 +58,7 @@ Le contenu est un **modèle réaliste** ; remplacez les valeurs d'exemple :
 - **Mentions légales & confidentialité** : complétez identité, statut,
   SIREN/SIRET, hébergeur (obligatoire en France).
 - **Nom de domaine** : les URLs canoniques et le sitemap pointent vers
-  `https://alonmarec-interiors.fr/` — adaptez à votre domaine définitif.
+  `https://am-studio.fr/` — adaptez à votre domaine définitif.
 
 ## Formulaire de contact
 
