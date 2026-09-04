@@ -5,17 +5,17 @@
    ========================================================================== */
 
 :root {
-  /* Charte graphique AM Studio (Alon Marec) */
-  --bg: #ffffff;          /* blanc — #ffffff */
-  --bg-muted: #f4f0e8;    /* beige très clair, dérivé de #c6ae94 */
-  --ink: #000000;         /* noir — #000000 */
+  /* Charte AM Studio (Alon Marec) — d'après l'Instagram @am__interiors_ */
+  --bg: #f5f1e9;          /* crème (fond des stories) */
+  --bg-muted: #ece4d6;    /* crème plus profond */
+  --ink: #14110d;         /* noir doux */
   --ink-soft: #6a6153;    /* gris-brun pour le texte secondaire */
-  --line: #e4ddce;
+  --line: #e2dac9;
   --accent: #957250;      /* bronze — #957250 */
   --accent-dark: #7a5c3d; /* bronze foncé */
   --beige: #c6ae94;       /* beige — #c6ae94 */
   --walnut: #5a4632;
-  --dark: #111010;        /* noir (sections sombres) */
+  --dark: #14110d;        /* noir (sections sombres) */
   --white: #ffffff;
   --ok: #2f8f5b;
   --err: #cf5140;
@@ -25,10 +25,10 @@
   --radius: 4px;
   --transition: 0.4s cubic-bezier(0.22, 1, 0.36, 1);
 
-  /* Typographie de la charte : Lucida Sans Typewriter (fallback web IBM Plex Mono) */
-  --font-mono: "Lucida Sans Typewriter", "IBM Plex Mono", "Lucida Console", ui-monospace, "Courier New", monospace;
-  --font-sans: var(--font-mono);
-  --font-serif: var(--font-mono);
+  /* Typographie d'après l'Instagram : titres serif (Playfair) + texte sans léger (Jost) */
+  --font-serif: "Playfair Display", Georgia, "Times New Roman", serif;
+  --font-sans: "Jost", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "IBM Plex Mono", "Lucida Console", ui-monospace, monospace;
 }
 
 /* ---------- Reset & base ---------- */
@@ -149,8 +149,8 @@ ul { margin: 0; padding: 0; list-style: none; }
   max-width: 780px;
 }
 .hero-title {
-  font-family: var(--font-serif); font-weight: 700;
-  font-size: clamp(1.9rem, 5vw, 3.4rem); letter-spacing: -0.01em; line-height: 1.15; margin-bottom: 1.2rem;
+  font-family: var(--font-serif); font-weight: 600;
+  font-size: clamp(2.3rem, 5.5vw, 4rem); letter-spacing: -0.005em; line-height: 1.1; margin-bottom: 1.2rem;
 }
 .hero-lead {
   font-size: clamp(1.05rem, 2vw, 1.35rem); max-width: 52ch;
@@ -167,8 +167,8 @@ ul { margin: 0; padding: 0; list-style: none; }
 .breadcrumb { font-size: 0.85rem; color: var(--ink-soft); margin-bottom: 0.75rem; }
 .breadcrumb a:hover { color: var(--accent); }
 .page-head h1 {
-  font-family: var(--font-serif); font-weight: 700;
-  font-size: clamp(1.9rem, 4.5vw, 2.9rem); letter-spacing: -0.01em; line-height: 1.15;
+  font-family: var(--font-serif); font-weight: 600;
+  font-size: clamp(2.1rem, 4.5vw, 3.2rem); letter-spacing: -0.005em; line-height: 1.1;
 }
 .page-head p { color: var(--ink-soft); max-width: 60ch; margin: 1rem 0 0; font-size: 1.05rem; }
 
@@ -179,9 +179,15 @@ ul { margin: 0; padding: 0; list-style: none; }
 .section--dark .section-title, .section--dark h3 { color: var(--white); }
 .section-head { max-width: 640px; margin-bottom: clamp(2.25rem, 6vw, 3.5rem); }
 .section-head.center { margin-inline: auto; text-align: center; }
+/* Filet fin bronze sous les titres centrés (signature Instagram) */
+.section-head.center .section-title::after,
+.cta-band .section-title::after {
+  content: ""; display: block; width: 54px; height: 2px;
+  background: var(--accent); margin: 1.15rem auto 0;
+}
 .section-title {
-  font-family: var(--font-serif); font-weight: 700;
-  font-size: clamp(1.55rem, 4vw, 2.35rem); letter-spacing: -0.01em; line-height: 1.18; margin-bottom: 1rem;
+  font-family: var(--font-serif); font-weight: 600;
+  font-size: clamp(1.75rem, 4vw, 2.6rem); letter-spacing: -0.005em; line-height: 1.14; margin-bottom: 1rem;
 }
 .section-sub { color: var(--ink-soft); font-size: 1.05rem; margin: 0; }
 
@@ -237,7 +243,7 @@ ul { margin: 0; padding: 0; list-style: none; }
   display: inline-block; font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase;
   color: var(--accent); font-weight: 600; margin-bottom: 0.55rem;
 }
-.project-title { font-family: var(--font-serif); font-size: 1.2rem; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 0.35rem; }
+.project-title { font-family: var(--font-serif); font-size: 1.4rem; font-weight: 600; letter-spacing: 0; margin-bottom: 0.35rem; }
 .project-meta { color: var(--ink-soft); font-size: 0.9rem; margin: 0; }
 .status-badge {
   display: inline-block; font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase;
