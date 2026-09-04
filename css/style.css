@@ -5,26 +5,30 @@
    ========================================================================== */
 
 :root {
-  --bg: #f3f1ec;          /* ivoire / blanc cassé */
-  --bg-muted: #e8e4db;    /* ivoire plus profond */
-  --ink: #16130f;         /* brun très foncé, presque noir */
-  --ink-soft: #5b544a;    /* brun grisé */
-  --line: #d8d1c4;
-  --accent: #95744b;      /* bronze discret */
-  --accent-dark: #7b5d3a; /* bronze foncé */
-  --walnut: #4a3829;      /* noyer */
-  --dark: #15110c;        /* espresso, presque noir */
+  /* Charte graphique AM Studio (Alon Marec) */
+  --bg: #ffffff;          /* blanc — #ffffff */
+  --bg-muted: #f4f0e8;    /* beige très clair, dérivé de #c6ae94 */
+  --ink: #000000;         /* noir — #000000 */
+  --ink-soft: #6a6153;    /* gris-brun pour le texte secondaire */
+  --line: #e4ddce;
+  --accent: #957250;      /* bronze — #957250 */
+  --accent-dark: #7a5c3d; /* bronze foncé */
+  --beige: #c6ae94;       /* beige — #c6ae94 */
+  --walnut: #5a4632;
+  --dark: #111010;        /* noir (sections sombres) */
   --white: #ffffff;
   --ok: #2f8f5b;
   --err: #cf5140;
 
   --max: 1180px;
   --gutter: clamp(1.25rem, 4vw, 3rem);
-  --radius: 5px;
+  --radius: 4px;
   --transition: 0.4s cubic-bezier(0.22, 1, 0.36, 1);
 
-  --font-sans: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  --font-serif: Georgia, "Times New Roman", serif;
+  /* Typographie de la charte : Lucida Sans Typewriter (fallback web IBM Plex Mono) */
+  --font-mono: "Lucida Sans Typewriter", "IBM Plex Mono", "Lucida Console", ui-monospace, "Courier New", monospace;
+  --font-sans: var(--font-mono);
+  --font-serif: var(--font-mono);
 }
 
 /* ---------- Reset & base ---------- */
@@ -96,15 +100,13 @@ ul { margin: 0; padding: 0; list-style: none; }
   display: flex; align-items: center; justify-content: space-between; height: 70px;
 }
 .logo {
-  font-size: 1.05rem; font-weight: 600; letter-spacing: 0.02em;
-  display: inline-flex; align-items: center; gap: 0.6rem; text-transform: uppercase;
+  font-size: 1.05rem; font-weight: 700; letter-spacing: 0.02em;
+  display: inline-flex; align-items: center; gap: 0.55rem; text-transform: uppercase;
 }
 .logo-monogram {
-  display: inline-grid; place-items: center; width: 30px; height: 30px;
-  background: var(--ink); color: var(--bg); border-radius: 3px;
-  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.03em;
+  height: 26px; width: auto; display: block;
 }
-.logo-word { font-weight: 500; letter-spacing: 0.16em; }
+.logo-word { font-weight: 400; letter-spacing: 0.18em; }
 .logo-accent { color: var(--accent); }
 
 .nav { display: flex; align-items: center; }
@@ -147,8 +149,8 @@ ul { margin: 0; padding: 0; list-style: none; }
   max-width: 780px;
 }
 .hero-title {
-  font-family: var(--font-serif); font-weight: 500;
-  font-size: clamp(2.1rem, 6vw, 4.2rem); letter-spacing: -0.02em; margin-bottom: 1.2rem;
+  font-family: var(--font-serif); font-weight: 700;
+  font-size: clamp(1.9rem, 5vw, 3.4rem); letter-spacing: -0.01em; line-height: 1.15; margin-bottom: 1.2rem;
 }
 .hero-lead {
   font-size: clamp(1.05rem, 2vw, 1.35rem); max-width: 52ch;
@@ -165,8 +167,8 @@ ul { margin: 0; padding: 0; list-style: none; }
 .breadcrumb { font-size: 0.85rem; color: var(--ink-soft); margin-bottom: 0.75rem; }
 .breadcrumb a:hover { color: var(--accent); }
 .page-head h1 {
-  font-family: var(--font-serif); font-weight: 500;
-  font-size: clamp(2rem, 5vw, 3.2rem); letter-spacing: -0.015em;
+  font-family: var(--font-serif); font-weight: 700;
+  font-size: clamp(1.9rem, 4.5vw, 2.9rem); letter-spacing: -0.01em; line-height: 1.15;
 }
 .page-head p { color: var(--ink-soft); max-width: 60ch; margin: 1rem 0 0; font-size: 1.05rem; }
 
@@ -178,8 +180,8 @@ ul { margin: 0; padding: 0; list-style: none; }
 .section-head { max-width: 640px; margin-bottom: clamp(2.25rem, 6vw, 3.5rem); }
 .section-head.center { margin-inline: auto; text-align: center; }
 .section-title {
-  font-family: var(--font-serif); font-weight: 500;
-  font-size: clamp(1.8rem, 4.5vw, 2.8rem); letter-spacing: -0.015em; margin-bottom: 1rem;
+  font-family: var(--font-serif); font-weight: 700;
+  font-size: clamp(1.55rem, 4vw, 2.35rem); letter-spacing: -0.01em; line-height: 1.18; margin-bottom: 1rem;
 }
 .section-sub { color: var(--ink-soft); font-size: 1.05rem; margin: 0; }
 
@@ -235,7 +237,7 @@ ul { margin: 0; padding: 0; list-style: none; }
   display: inline-block; font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase;
   color: var(--accent); font-weight: 600; margin-bottom: 0.55rem;
 }
-.project-title { font-family: var(--font-serif); font-size: 1.3rem; font-weight: 500; margin-bottom: 0.35rem; }
+.project-title { font-family: var(--font-serif); font-size: 1.2rem; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 0.35rem; }
 .project-meta { color: var(--ink-soft); font-size: 0.9rem; margin: 0; }
 .status-badge {
   display: inline-block; font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase;
@@ -383,7 +385,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 .site-footer { background: var(--dark); color: #b8b1a5; padding-top: 3rem; }
 .footer-top { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 2rem; padding-bottom: 2.5rem; }
 .footer-brand .logo { color: var(--bg); font-size: 1.05rem; }
-.site-footer .logo-monogram { background: var(--accent); color: var(--dark); }
+.site-footer .logo-monogram { filter: invert(1) brightness(1.6); }
 .footer-brand p { margin-top: 1rem; max-width: 34ch; font-size: 0.92rem; }
 .footer-col h4 { font-size: 0.78rem; letter-spacing: 0.14em; text-transform: uppercase; color: #8f887c; margin-bottom: 1rem; }
 .footer-col a { display: block; padding: 0.28rem 0; font-size: 0.92rem; color: #b8b1a5; }
