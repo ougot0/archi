@@ -1,11 +1,11 @@
 /* ==========================================================================
-   AM Studio — Architecture d'intérieur
+   Alon Marec — Architecture d'intérieur
    Conception d'intérieur, plans & visualisation 3D
    Feuille de style partagée · sobre, contemporaine, grandes images.
    ========================================================================== */
 
 :root {
-  /* Charte AM Studio (Alon Marec) — d'après l'Instagram @am__interiors_ */
+  /* Charte Alon Marec — d'après l'Instagram @am__interiors_ */
   --bg: #f5f1e9;          /* crème (fond des stories) */
   --bg-muted: #ece4d6;    /* crème plus profond */
   --ink: #14110d;         /* noir doux */
@@ -245,6 +245,20 @@ ul { margin: 0; padding: 0; list-style: none; }
 }
 .project-title { font-family: var(--font-serif); font-size: 1.4rem; font-weight: 600; letter-spacing: 0; margin-bottom: 0.35rem; }
 .project-meta { color: var(--ink-soft); font-size: 0.9rem; margin: 0; }
+/* Numérotation éditoriale des projets (01 — …) */
+.projects-grid { counter-reset: proj; }
+.project { counter-increment: proj; }
+.project-title::before {
+  content: counter(proj, decimal-leading-zero) " — ";
+  font-family: var(--font-sans); font-weight: 500; font-size: 0.7em;
+  letter-spacing: 0.06em; color: var(--accent); vertical-align: 0.12em;
+}
+/* Grille tarifaire indicative */
+.price-list { border-top: 1px solid var(--line); margin: 0; }
+.price-row { display: flex; justify-content: space-between; align-items: baseline; gap: 1.25rem; padding: 1.05rem 0; border-bottom: 1px solid var(--line); }
+.price-row dt { font-weight: 500; }
+.price-row dd { margin: 0; color: var(--accent); font-weight: 600; white-space: nowrap; }
+.price-row small { display: block; color: var(--ink-soft); font-weight: 400; font-size: 0.82rem; }
 .status-badge {
   display: inline-block; font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase;
   font-weight: 600; padding: 0.2rem 0.6rem; border-radius: 999px;
