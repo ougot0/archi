@@ -288,6 +288,32 @@ ul { margin: 0; padding: 0; list-style: none; }
 .gallery-media { aspect-ratio: 4 / 3; border-radius: var(--radius); background-size: cover; background-position: center; }
 .gallery figcaption { font-size: 0.85rem; color: var(--ink-soft); margin-top: 0.5rem; }
 
+/* ---------- Fiche projet : processus & documents ---------- */
+/* Étapes numérotées : problème → réflexion → conception → résultat */
+.process { margin-top: 2.5rem; }
+.process-step { margin-top: clamp(2.5rem, 6vw, 4rem); }
+.process-step:first-of-type { margin-top: 0; }
+.process-head {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.4rem 0.9rem;
+  margin-bottom: 1.5rem; padding-bottom: 0.85rem; border-bottom: 1px solid var(--line);
+}
+.process-num { font-family: var(--font-serif); color: var(--accent); font-size: 1.05rem; letter-spacing: 0.14em; }
+.process-head h2 { font-family: var(--font-serif); font-weight: 500; font-size: clamp(1.35rem, 3vw, 1.7rem); margin: 0; }
+.process-head .lead { flex-basis: 100%; margin: 0.35rem 0 0; color: var(--ink-soft); font-size: 0.98rem; max-width: 70ch; }
+
+/* Documents (plans, zoning, coupes, planches, croquis) — image ENTIÈRE, jamais rognée */
+.docs { display: grid; gap: 1.5rem; grid-template-columns: 1fr; }
+.docs.grid2 { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+.docs.grid3 { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+.doc { margin: 0; }
+.doc img {
+  width: 100%; height: auto; display: block;
+  border: 1px solid var(--line); border-radius: var(--radius); background: var(--white);
+}
+.doc figcaption { font-size: 0.85rem; color: var(--ink-soft); margin-top: 0.55rem; letter-spacing: 0.01em; }
+/* Rendus photoréalistes : mêmes règles mais coins nets sur fond sombre possible */
+.doc.render img { background: var(--bg-muted); }
+
 /* ---------- Services ---------- */
 .service-block {
   padding-block: clamp(2.5rem, 6vw, 4rem); border-top: 1px solid var(--line);
