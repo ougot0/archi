@@ -113,7 +113,6 @@
   }
   if (form && status) {
     form.addEventListener("submit", function (e) {
-      e.preventDefault();
       var required = form.querySelectorAll("[required]");
       var valid = true;
       required.forEach(function (f) {
@@ -126,13 +125,14 @@
         setError(email, true); valid = false;
       }
       if (!valid) {
+        e.preventDefault();
         status.textContent = "Merci de compléter les champs obligatoires.";
         status.className = "form-status is-error";
         return;
       }
-      status.textContent = "Merci ! Votre demande a bien été envoyée. Je vous réponds sous 48 h.";
-      status.className = "form-status is-ok";
-      form.reset();
+      // Valide : on laisse le navigateur envoyer le formulaire par e-mail.
+      status.textContent = "Envoi en cours…";
+      status.className = "form-status";
     });
     form.addEventListener("input", function (e) {
       if (e.target.closest(".field")) setError(e.target, false);
