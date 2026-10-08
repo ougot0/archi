@@ -503,3 +503,57 @@ ul { margin: 0; padding: 0; list-style: none; }
   .reveal { opacity: 1; transform: none; transition: none; }
   * { scroll-behavior: auto !important; }
 }
+
+/* ==========================================================================
+   Direction éditoriale — retirer les réflexes "IA / template"
+   Compositions nettes, moins "carte", numérotation et pastilles supprimées.
+   ========================================================================== */
+:root { --radius: 0px; }
+
+/* Plus de filets décoratifs sous les titres centrés */
+.section-head.center .section-title::after,
+.cta-band .section-title::after { content: none; display: none; }
+
+/* Titres de section alignés à gauche (fin du "tout centré") */
+.section-head.center { text-align: left; margin-inline: 0; max-width: 760px; }
+.eyebrow { letter-spacing: 0.1em; font-size: 0.72rem; }
+
+/* Projets : vignettes éditoriales, pas des cartes */
+.project { background: transparent; border: 0; border-radius: 0; overflow: visible; }
+.project:hover { transform: none; box-shadow: none; }
+.project-media { border-radius: 0; overflow: hidden; }
+.project-body { padding: 1rem 0 0; }
+.project-title { font-size: 1.5rem; }
+.project-title::before { content: none; }           /* retire "01 — " */
+
+/* Badges & tags : du texte, pas des pastilles */
+.status-badge { background: none; border: 0; padding: 0; color: var(--accent);
+  text-transform: none; letter-spacing: 0.02em; font-weight: 600; }
+
+/* Chips → énumération en ligne séparée par des points */
+.chips { gap: 0 0; flex-wrap: wrap; align-items: baseline; }
+.chip { background: none; border: 0; border-radius: 0; padding: 0;
+  color: var(--ink-soft); font-size: 0.92rem; }
+.chip + .chip::before { content: "·"; margin: 0 0.6rem; color: var(--accent); }
+
+/* Fiches "cartes" mises à plat, séparées par des filets fins */
+.feature, .detail-card, .price-card, .testimonial {
+  background: transparent; border: 0; border-top: 1px solid var(--line);
+  border-radius: 0; box-shadow: none; padding: 1.6rem 0;
+}
+.feature:hover { transform: none; }
+.feature-icon { color: var(--accent); }
+
+/* Étapes (services / approche) : chiffre en serif, sans bulle ni carte */
+.step { background: transparent; border: 0; border-top: 1px solid var(--line);
+  border-radius: 0; padding: 1.7rem 0; grid-template-columns: 54px 1fr; gap: 1.5rem; }
+.step-num { width: auto; height: auto; background: none; border: 0; border-radius: 0;
+  place-items: start; font-family: var(--font-serif); font-size: 2rem; color: var(--accent); }
+
+/* Fiche projet : "faits" en bandeau à filets, pas en boîte */
+.project-facts { background: transparent; border: 0;
+  border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+  border-radius: 0; padding: 1.5rem 0; }
+
+/* Boutons un peu plus nets */
+.btn { border-radius: 0; }
