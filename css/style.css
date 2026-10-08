@@ -26,8 +26,8 @@
   --transition: 0.4s cubic-bezier(0.22, 1, 0.36, 1);
 
   /* Typographie d'après l'Instagram : titres serif (Playfair) + texte sans léger (Jost) */
-  --font-serif: "Playfair Display", Georgia, "Times New Roman", serif;
-  --font-sans: "Jost", "Helvetica Neue", Arial, sans-serif;
+  --font-serif: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  --font-sans: "Archivo", "Helvetica Neue", Arial, sans-serif;
   --font-mono: "IBM Plex Mono", "Lucida Console", ui-monospace, monospace;
 }
 
@@ -575,3 +575,17 @@ ul { margin: 0; padding: 0; list-style: none; }
 
 /* Respiration : un peu plus d'air dans les listes éditoriales */
 .step { padding: 1.5rem 0; }
+
+/* ==========================================================================
+   Typographie : Cormorant Garamond (titres) + Archivo (texte)
+   Cormorant est haute-contraste et fin : on lui donne du poids et de l'ampleur.
+   ========================================================================== */
+.hero-title { font-weight: 600; font-size: clamp(2.8rem, 7vw, 5rem); line-height: 1.04; letter-spacing: 0; }
+.page-head h1 { font-weight: 600; font-size: clamp(2.6rem, 6vw, 4rem); letter-spacing: 0; }
+.section-title { font-weight: 600; font-size: clamp(2rem, 4.5vw, 3rem); letter-spacing: 0; }
+.project-title { font-weight: 600; font-size: 1.75rem; }
+.prose h2 { font-weight: 600; font-size: 1.9rem; }
+.step h3, .feature h3 { font-weight: 600; font-size: 1.35rem; font-family: var(--font-serif); }
+.process-head h2 { font-weight: 600; font-size: clamp(1.6rem, 3.2vw, 2rem); }
+/* corps en Archivo : interlignage un poil resserré */
+body { line-height: 1.6; }
