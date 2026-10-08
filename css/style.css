@@ -557,3 +557,21 @@ ul { margin: 0; padding: 0; list-style: none; }
 
 /* Boutons un peu plus nets */
 .btn { border-radius: 0; }
+
+/* ==========================================================================
+   DA v2 — enlever l'échafaudage "IA" : numéros 01/02/03, micro-labels majuscules
+   ========================================================================== */
+/* Plus de numéros gadget 01/02/03 (services, approche, process projet) */
+.step-num, .process-num { display: none !important; }
+.step { grid-template-columns: 1fr; gap: 0.35rem; }
+.process-head { border-bottom: 0; padding-bottom: 0; margin-bottom: 1.1rem; gap: 0.3rem 1rem; }
+
+/* Kickers : italique serif éditorial plutôt que petit label technique en capitales */
+.eyebrow {
+  font-family: var(--font-serif); font-style: italic; font-weight: 500;
+  text-transform: none; letter-spacing: 0.005em; font-size: 1.02rem; color: var(--accent);
+}
+.eyebrow--light { color: #d8c3a0; }
+
+/* Respiration : un peu plus d'air dans les listes éditoriales */
+.step { padding: 1.5rem 0; }
