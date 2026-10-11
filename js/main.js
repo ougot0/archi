@@ -142,7 +142,7 @@
   /* ---- Cartes en relief : inclinaison 3D qui suit le pointeur ---- */
   var finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
   if (finePointer && !prefersReduced) {
-    var tiltEls = document.querySelectorAll(".project, .feature, .price-card, .step, .project-hero, .gallery-media");
+    var tiltEls = document.querySelectorAll(".project, .feature, .price-card, .step, .project-hero, .gallery-media, .about-photo");
     tiltEls.forEach(function (el) {
       el.classList.add("tilt");
       var max = el.classList.contains("project-hero") ? 4 : 9;
