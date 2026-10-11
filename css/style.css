@@ -26,8 +26,8 @@
   --transition: 0.4s cubic-bezier(0.22, 1, 0.36, 1);
 
   /* Typographie d'après l'Instagram : titres serif (Playfair) + texte sans léger (Jost) */
-  --font-serif: "Playfair Display", Georgia, "Times New Roman", serif;
-  --font-sans: "Jost", "Helvetica Neue", Arial, sans-serif;
+  --font-serif: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  --font-sans: "Archivo", "Helvetica Neue", Arial, sans-serif;
   --font-mono: "IBM Plex Mono", "Lucida Console", ui-monospace, monospace;
 }
 
@@ -609,6 +609,40 @@ ul { margin: 0; padding: 0; list-style: none; }
 .render-grid img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: var(--radius); display: block; }
 .render-grid figcaption { font-size: 0.85rem; color: var(--ink-soft); margin-top: 0.5rem; }
 
+
+/* ---------- Pages en ligne : images en <img>, planches de dossier, tarifs ---------- */
+img.project-media { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; display: block; }
+img.project-hero {
+  width: 100%; height: auto; max-height: 82vh; object-fit: contain; display: block;
+  background: var(--bg-muted); border-radius: var(--radius); margin-bottom: 2.5rem; aspect-ratio: auto;
+}
+.process { margin-top: clamp(2.5rem, 6vw, 4rem); }
+.process-step { margin-top: clamp(3rem, 7vw, 5rem); padding-top: clamp(2rem, 5vw, 3rem); border-top: 1px solid var(--line); }
+.process-head { margin-bottom: 1.5rem; }
+.process-num { display: none; }
+.process-head h2 { font-family: var(--font-serif); font-weight: 600; font-size: clamp(1.6rem, 3.2vw, 2.2rem); }
+.process-head .lead { margin: 0.5rem 0 0; color: var(--ink-soft); max-width: 70ch; }
+.docs { display: grid; gap: 1.5rem; grid-template-columns: 1fr; margin-top: 1.25rem; }
+.docs.grid2 { grid-template-columns: repeat(2, 1fr); align-items: start; }
+.docs.grid3 { grid-template-columns: repeat(3, 1fr); align-items: start; }
+.doc { margin: 0; }
+.doc img { width: 100%; height: auto; display: block; border-radius: var(--radius); cursor: zoom-in; }
+.doc.render img { box-shadow: 0 30px 50px -36px rgba(20,17,13,0.6); }
+.doc figcaption { font-size: 0.88rem; color: var(--ink-soft); margin-top: 0.6rem; }
+.price-list { border-top: 1px solid var(--line); margin: 0; }
+.price-row { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 0.5rem 1.5rem; padding: 1rem 0; border-bottom: 1px solid var(--line); }
+.price-row dt { font-weight: 500; }
+.price-row dt small { display: block; font-weight: 400; color: var(--ink-soft); font-size: 0.88rem; margin-top: 0.15rem; }
+.price-row dd { margin: 0; color: var(--accent); font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.price-row dd small { display: block; color: var(--ink-soft); font-weight: 400; font-size: 0.78rem; }
+.footer-heading { font-size: 0.78rem; letter-spacing: 0.14em; text-transform: uppercase; color: #8f887c; margin-bottom: 1rem; font-weight: 600; }
+
+/* Visionneuse plein écran des planches */
+.lightbox { position: fixed; inset: 0; z-index: 400; background: rgba(20,17,13,0.92); display: grid; place-items: center; padding: 3vh 3vw; cursor: zoom-out; }
+.lightbox img { max-width: 100%; max-height: 92vh; object-fit: contain; border-radius: var(--radius); box-shadow: 0 30px 80px -20px rgba(0,0,0,0.6); }
+.lightbox figcaption { color: #ddd4c8; font-size: 0.9rem; margin-top: 0.8rem; text-align: center; }
+.lightbox-close { position: absolute; top: 1rem; right: 1.2rem; background: none; border: 0; color: #fff; font-size: 2rem; cursor: pointer; line-height: 1; }
+
 /* ---------- Responsive ---------- */
 @media (max-width: 900px) {
   .service-block, .about-inner, .contact-inner, .footer-top, .depth-inner { grid-template-columns: 1fr; }
@@ -617,6 +651,7 @@ ul { margin: 0; padding: 0; list-style: none; }
   .about-photo { aspect-ratio: 16 / 10; }
   .about-float { right: 4%; width: 46%; }
   .render-grid { grid-template-columns: 1fr 1fr; }
+  .docs.grid3 { grid-template-columns: repeat(2, 1fr); }
   .nav-toggle { display: flex; }
   .nav-menu {
     position: fixed; inset: 70px 0 auto 0; flex-direction: column; align-items: flex-start; gap: 0;
@@ -634,7 +669,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 }
 @media (max-width: 560px) {
   .form-row { grid-template-columns: 1fr; }
-  .ba-pair, .render-grid { grid-template-columns: 1fr; }
+  .ba-pair, .render-grid, .docs.grid2, .docs.grid3 { grid-template-columns: 1fr; }
   .ba-media { aspect-ratio: 4 / 3.4; }
   .step { grid-template-columns: 1fr; gap: 0.75rem; }
   .footer-bottom { flex-direction: column; align-items: flex-start; }

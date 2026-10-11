@@ -26,11 +26,16 @@
       toggle.setAttribute("aria-expanded", String(open));
       toggle.setAttribute("aria-label", open ? "Fermer le menu" : "Ouvrir le menu");
     });
+    function closeMenu() {
+      menu.classList.remove("is-open");
+      toggle.setAttribute("aria-expanded", "false");
+      toggle.setAttribute("aria-label", "Ouvrir le menu");
+    }
     menu.addEventListener("click", function (e) {
-      if (e.target.tagName === "A") {
-        menu.classList.remove("is-open");
-        toggle.setAttribute("aria-expanded", "false");
-      }
+      if (e.target.tagName === "A") closeMenu();
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && menu.classList.contains("is-open")) { closeMenu(); toggle.focus(); }
     });
   }
 
@@ -108,12 +113,11 @@
   var form = document.getElementById("contact-form");
   var status = document.getElementById("form-status");
   function setError(field, on) {
-    var w = field.closest(".field");
+    var w = field.closest(".field, .checkbox");
     if (w) w.classList.toggle("has-error", on);
   }
   if (form && status) {
     form.addEventListener("submit", function (e) {
-      e.preventDefault();
       var required = form.querySelectorAll("[required]");
       var valid = true;
       required.forEach(function (f) {
@@ -126,16 +130,19 @@
         setError(email, true); valid = false;
       }
       if (!valid) {
+        e.preventDefault();
+        var firstError = form.querySelector(".has-error input, .has-error select, .has-error textarea");
+        if (firstError) firstError.focus();
         status.textContent = "Merci de compléter les champs obligatoires.";
         status.className = "form-status is-error";
         return;
       }
-      status.textContent = "Merci ! Votre demande a bien été envoyée. Je vous réponds sous 48 h.";
-      status.className = "form-status is-ok";
-      form.reset();
+      // Valide : on laisse le navigateur envoyer le formulaire par e-mail.
+      status.textContent = "Envoi en cours…";
+      status.className = "form-status";
     });
     form.addEventListener("input", function (e) {
-      if (e.target.closest(".field")) setError(e.target, false);
+      if (e.target.closest(".field, .checkbox")) setError(e.target, false);
     });
   }
 
@@ -196,6 +203,47 @@
         });
       }
     }
+  }
+
+  /* ---- Visionneuse : agrandir une planche (plans, coupes, détails) ---- */
+  var docImgs = document.querySelectorAll(".doc img, .ba-pair--plans img");
+  if (docImgs.length) {
+    var openBox = function (img) {
+      var fig = img.closest("figure");
+      var cap = fig && fig.querySelector("figcaption");
+      var box = document.createElement("div");
+      box.className = "lightbox";
+      box.setAttribute("role", "dialog");
+      box.setAttribute("aria-modal", "true");
+      box.setAttribute("aria-label", img.alt || "Planche agrandie");
+      box.innerHTML = '<button class="lightbox-close" type="button" aria-label="Fermer">×</button><figure style="margin:0"></figure>';
+      var big = document.createElement("img");
+      big.src = img.currentSrc || img.src;
+      big.alt = img.alt;
+      box.querySelector("figure").appendChild(big);
+      if (cap) {
+        var c = document.createElement("figcaption");
+        c.textContent = cap.textContent;
+        box.querySelector("figure").appendChild(c);
+      }
+      var close = function () {
+        box.remove();
+        document.removeEventListener("keydown", onKey);
+        img.focus();
+      };
+      var onKey = function (e) { if (e.key === "Escape") close(); };
+      box.addEventListener("click", close);
+      document.addEventListener("keydown", onKey);
+      document.body.appendChild(box);
+      box.querySelector(".lightbox-close").focus();
+    };
+    docImgs.forEach(function (img) {
+      img.setAttribute("tabindex", "0");
+      img.addEventListener("click", function () { openBox(img); });
+      img.addEventListener("keydown", function (e) {
+        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openBox(img); }
+      });
+    });
   }
 
   /* ---- Bandeau cookies ---- */
