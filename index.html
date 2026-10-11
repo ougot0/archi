@@ -65,8 +65,9 @@
 
   <main id="main">
     <!-- 1. HERO -->
-    <section class="hero" id="accueil">
+    <section class="hero hero--3d" id="accueil" data-hero-3d data-hero-art="images/zohar-card.jpg">
       <div class="hero-bg" role="img" aria-label="Bar du restaurant Zohar, rendu 3D — projet AM Studio" style="background-image: linear-gradient(180deg, rgba(21,17,12,0.45) 0%, rgba(21,17,12,0.82) 100%), url('images/zohar.jpg');"></div>
+      <div class="hero-veil" aria-hidden="true"></div>
       <div class="container hero-inner">
         <p class="eyebrow eyebrow--light reveal">Conception d'intérieur, plans &amp; visualisation 3D</p>
         <h1 class="hero-title reveal">Des espaces pensés,<br />modélisés et mis en scène.</h1>
@@ -80,16 +81,40 @@
           <a href="contact.html" class="btn btn-light">Parler de votre projet</a>
         </div>
       </div>
+      <p class="hero-3d-hint" aria-hidden="true"><span class="hero-3d-dot"></span>Séjour modélisé en 3D temps réel · déplacez le curseur</p>
     </section>
 
-    <!-- 3. PRÉSENTATION RAPIDE -->
-    <section class="section">
-      <div class="container narrow reveal" style="text-align:center;">
-        <p class="eyebrow">En quelques mots</p>
-        <p style="font-family:var(--font-serif); font-size:clamp(1.3rem,3vw,1.9rem); line-height:1.4; color:var(--ink);">
-          Chaque projet est modélisé précisément afin de tester les implantations, les volumes,
-          les matériaux, les éclairages et l'ambiance <em>avant</em> la réalisation.
-        </p>
+    <!-- 3. PRÉSENTATION RAPIDE — du plan à l'espace (vue éclatée 3D) -->
+    <section class="section depth-section">
+      <div class="container depth-inner">
+        <div class="depth-copy reveal">
+          <p class="eyebrow">En quelques mots</p>
+          <p class="depth-lead">
+            Chaque projet est modélisé précisément afin de tester les implantations, les volumes,
+            les matériaux, les éclairages et l'ambiance <em>avant</em> la réalisation.
+          </p>
+          <ol class="depth-legend">
+            <li><span>01</span>Plan 2D — implantation &amp; circulations</li>
+            <li><span>02</span>Matériaux — teintes, textures, mobilier</li>
+            <li><span>03</span>Rendu 3D — l'ambiance, avant travaux</li>
+          </ol>
+        </div>
+        <div class="depth-stage" data-depth-stage>
+          <div class="depth-stack">
+            <figure class="depth-layer" style="--i:0">
+              <img src="images/tiny-house-plan.jpg" alt="Plan 2D aménagé de la Tiny House de Melun" loading="lazy" style="background:#fff" />
+              <figcaption>01 · Plan</figcaption>
+            </figure>
+            <figure class="depth-layer" style="--i:1">
+              <img src="images/matzav-materiaux.jpg" alt="Planche matériaux du restaurant Matzav Zor" loading="lazy" />
+              <figcaption>02 · Matériaux</figcaption>
+            </figure>
+            <figure class="depth-layer" style="--i:2">
+              <img src="images/tiny-house.jpg" alt="Rendu 3D de la Tiny House, ouverte sur le jardin" loading="lazy" />
+              <figcaption>03 · Rendu 3D</figcaption>
+            </figure>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -278,5 +303,6 @@
   </div>
 
   <script src="js/main.js" defer></script>
+  <script type="module" src="js/hero-3d.js"></script>
 </body>
 </html>

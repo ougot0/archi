@@ -21,12 +21,24 @@ Site vitrine multi-pages pour un professionnel de l'architecture d'intérieur :
 | Mentions légales | `mentions-legales.html` |
 | Confidentialité & cookies | `politique-confidentialite.html` |
 
-Fichiers communs : `css/style.css`, `js/main.js`, `favicon.svg`,
+Fichiers communs : `css/style.css`, `js/main.js`, `js/hero-3d.js`
+(scène 3D de l'accueil), `js/vendor/` (Three.js r160, licence MIT), `favicon.svg`,
 `robots.txt`, `sitemap.xml`.
 
 ## Fonctionnalités
 
 - Design sobre et contemporain (blanc cassé, noyer, accent terracotta), grandes images.
+- **Refonte 3D** :
+  - Accueil : séjour modélisé en **3D temps réel** (Three.js, embarqué localement, sans CDN)
+    — canapé bouclé, table travertin, niche en arche, lampadaire globe, lumière du soleil
+    par la fenêtre. La caméra suit le curseur et avance au scroll. En pause hors écran ;
+    repli automatique sur l'image si WebGL est indisponible ; image fixe avec
+    `prefers-reduced-motion`.
+  - Section « En quelques mots » : **vue éclatée** plan → matériaux → rendu 3D qui se
+    déploie au scroll.
+  - Cartes projets, prestations, tarifs, étapes et visuels des fiches : **inclinaison 3D**
+    et reflet qui suivent le pointeur (souris uniquement).
+  - En-têtes de page : sol quadrillé « plan d'architecte » en perspective.
 - Menu mobile, apparition au scroll, compteurs, filtres de projets, accordéon FAQ.
 - Bouton **WhatsApp** flottant + numéro cliquable.
 - **Bandeau cookies** (choix mémorisé) et pages **RGPD / mentions légales**.

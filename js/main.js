@@ -139,6 +139,65 @@
     });
   }
 
+  /* ---- Cartes en relief : inclinaison 3D qui suit le pointeur ---- */
+  var finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+  if (finePointer && !prefersReduced) {
+    var tiltEls = document.querySelectorAll(".project, .feature, .price-card, .step, .project-hero, .gallery-media");
+    tiltEls.forEach(function (el) {
+      el.classList.add("tilt");
+      var max = el.classList.contains("project-hero") ? 4 : 9;
+      el.addEventListener("pointermove", function (e) {
+        var r = el.getBoundingClientRect();
+        var x = (e.clientX - r.left) / r.width;
+        var y = (e.clientY - r.top) / r.height;
+        el.classList.add("is-tilting");
+        el.style.setProperty("--rx", ((0.5 - y) * max).toFixed(2) + "deg");
+        el.style.setProperty("--ry", ((x - 0.5) * max * 1.3).toFixed(2) + "deg");
+        el.style.setProperty("--mx", (x * 100).toFixed(1) + "%");
+        el.style.setProperty("--my", (y * 100).toFixed(1) + "%");
+        el.style.setProperty("--px", (x - 0.5).toFixed(3));
+        el.style.setProperty("--py", (y - 0.5).toFixed(3));
+      });
+      el.addEventListener("pointerleave", function () {
+        el.classList.remove("is-tilting");
+        ["--rx", "--ry", "--px", "--py"].forEach(function (k) { el.style.removeProperty(k); });
+      });
+    });
+  }
+
+  /* ---- Vue éclatée plan → matériaux → rendu, pilotée par le scroll ---- */
+  var stage = document.querySelector("[data-depth-stage]");
+  if (stage) {
+    if (prefersReduced) {
+      stage.style.setProperty("--p", "1");
+    } else {
+      var ticking = false;
+      var updateDepth = function () {
+        ticking = false;
+        var r = stage.getBoundingClientRect();
+        var vh = window.innerHeight || 1;
+        var p = Math.min(Math.max((vh * 0.92 - r.top) / (vh * 0.65), 0), 1);
+        stage.style.setProperty("--p", p.toFixed(3));
+      };
+      window.addEventListener("scroll", function () {
+        if (!ticking) { ticking = true; requestAnimationFrame(updateDepth); }
+      }, { passive: true });
+      window.addEventListener("resize", updateDepth);
+      updateDepth();
+      if (finePointer) {
+        stage.addEventListener("pointermove", function (e) {
+          var r = stage.getBoundingClientRect();
+          stage.style.setProperty("--rx", (((e.clientY - r.top) / r.height - 0.5) * -10).toFixed(2) + "deg");
+          stage.style.setProperty("--rz", (((e.clientX - r.left) / r.width - 0.5) * 12).toFixed(2) + "deg");
+        });
+        stage.addEventListener("pointerleave", function () {
+          stage.style.removeProperty("--rx");
+          stage.style.removeProperty("--rz");
+        });
+      }
+    }
+  }
+
   /* ---- Bandeau cookies ---- */
   var banner = document.getElementById("cookie-banner");
   if (banner) {
