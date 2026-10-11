@@ -253,8 +253,8 @@ ul { margin: 0; padding: 0; list-style: none; }
 
 /* ---------- Fiche projet ---------- */
 .project-hero {
-  aspect-ratio: 16 / 8; border-radius: var(--radius); margin-bottom: 2.5rem;
-  background-size: cover; background-position: center;
+  aspect-ratio: 16 / 10; border-radius: var(--radius); margin-bottom: 2.5rem;
+  background-color: var(--bg-muted); background-size: contain; background-repeat: no-repeat; background-position: center;
 }
 .project-facts {
   display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem 1.5rem;
@@ -271,7 +271,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 .prose li::before { content: ""; position: absolute; left: 0; top: 0.62em; width: 8px; height: 8px; border: 2px solid var(--accent); transform: rotate(45deg); }
 .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; margin: 2rem 0; }
 .gallery figure { margin: 0; }
-.gallery-media { aspect-ratio: 4 / 3; border-radius: var(--radius); background-size: cover; background-position: center; }
+.gallery-media { aspect-ratio: 4 / 3; border-radius: var(--radius); background-color: var(--bg-muted); background-size: contain; background-repeat: no-repeat; background-position: center; }
 .gallery figcaption { font-size: 0.85rem; color: var(--ink-soft); margin-top: 0.5rem; }
 
 /* ---------- Services ---------- */
@@ -544,10 +544,6 @@ ul { margin: 0; padding: 0; list-style: none; }
 }
 .tilt:hover::before { opacity: 1; }
 .project.tilt:hover { box-shadow: 0 34px 60px -30px rgba(23,20,15,0.55); }
-.project.tilt .project-media {
-  transform: scale(1.08) translate(calc(var(--px) * -10px), calc(var(--py) * -10px));
-  transition: transform 0.5s cubic-bezier(0.22,1,0.36,1);
-}
 
 /* ---------- En-têtes de page : sol « plan d'architecte » en perspective ---------- */
 .page-head { position: relative; overflow: hidden; isolation: isolate; }
@@ -565,6 +561,47 @@ ul { margin: 0; padding: 0; list-style: none; }
 }
 @keyframes grid-drift { to { background-position: 0 64px, 0 64px; } }
 
+
+/* ---------- Fiches projet : démarche, avant / après, extraits de dossier ---------- */
+.project-section { margin-top: clamp(3rem, 7vw, 5rem); padding-top: clamp(2rem, 5vw, 3rem); border-top: 1px solid var(--line); }
+.project-section > .eyebrow { margin-bottom: 0.6rem; }
+.project-section > h2 { font-family: var(--font-serif); font-weight: 500; font-size: clamp(1.7rem, 3.4vw, 2.3rem); margin-bottom: 1rem; }
+.project-section .lead { color: var(--ink-soft); max-width: 68ch; margin-bottom: 0.9rem; }
+
+.process-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 0; margin-top: 1.75rem; border-top: 1px solid var(--line); }
+.process-item { padding: 1.4rem 1.5rem 1.4rem 0; border-bottom: 1px solid var(--line); }
+.process-item h3 { font-size: 0.74rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.55rem; font-weight: 600; }
+.process-item p { color: var(--ink-soft); margin: 0; font-size: 0.97rem; }
+
+.ba-block { margin-top: 2.5rem; }
+.ba-block > h3 { font-family: var(--font-serif); font-weight: 500; font-size: 1.35rem; margin-bottom: 1rem; display: flex; align-items: baseline; gap: 0.8rem; }
+.ba-block > h3 span { font-family: var(--font-sans); font-size: 0.74rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-soft); font-weight: 500; }
+.ba-pair { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(0.75rem, 2vw, 1.5rem); }
+.ba-pair figure { margin: 0; }
+.ba-media { position: relative; aspect-ratio: 4 / 5; overflow: hidden; border-radius: var(--radius); background: var(--bg-muted); }
+.ba-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.ba-tag {
+  position: absolute; left: 0.9rem; top: 0.9rem; z-index: 1;
+  font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 600;
+  padding: 0.35rem 0.7rem; border-radius: 999px; background: rgba(245,241,233,0.92); color: var(--ink);
+}
+.ba-tag--after { background: var(--ink); color: var(--bg); }
+.ba-pair figcaption { font-size: 0.88rem; color: var(--ink-soft); margin-top: 0.65rem; padding-top: 0.65rem; border-top: 1px solid var(--line); }
+.ba-missing { display: grid; place-items: center; text-align: center; padding: 1.5rem; color: var(--ink-soft); font-size: 0.88rem; border: 1px dashed var(--beige); background: repeating-linear-gradient(135deg, transparent 0 14px, rgba(198,174,148,0.12) 14px 15px); }
+
+.dossier-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.25rem; margin-top: 1.75rem; }
+.dossier-item { margin: 0; }
+.dossier-item a { display: block; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; background: #fff; transition: border-color var(--transition), box-shadow var(--transition); }
+.dossier-item a:hover { border-color: var(--accent); box-shadow: 0 18px 40px -28px rgba(20,17,13,0.5); }
+.dossier-item img { width: 100%; aspect-ratio: 16 / 10; object-fit: contain; background: #fff; display: block; }
+.dossier-item figcaption { font-size: 0.86rem; color: var(--ink-soft); margin-top: 0.55rem; }
+.dossier-item figcaption strong { color: var(--ink); font-weight: 600; }
+
+.render-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1.5rem; }
+.render-grid figure { margin: 0; }
+.render-grid img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: var(--radius); display: block; }
+.render-grid figcaption { font-size: 0.85rem; color: var(--ink-soft); margin-top: 0.5rem; }
+
 /* ---------- Responsive ---------- */
 @media (max-width: 900px) {
   .service-block, .about-inner, .contact-inner, .footer-top, .depth-inner { grid-template-columns: 1fr; }
@@ -572,6 +609,7 @@ ul { margin: 0; padding: 0; list-style: none; }
   .hero-3d-hint { display: none !important; }
   .about-photo { aspect-ratio: 16 / 10; }
   .about-float { right: 4%; width: 46%; }
+  .render-grid { grid-template-columns: 1fr 1fr; }
   .nav-toggle { display: flex; }
   .nav-menu {
     position: fixed; inset: 70px 0 auto 0; flex-direction: column; align-items: flex-start; gap: 0;
@@ -589,6 +627,8 @@ ul { margin: 0; padding: 0; list-style: none; }
 }
 @media (max-width: 560px) {
   .form-row { grid-template-columns: 1fr; }
+  .ba-pair, .render-grid { grid-template-columns: 1fr; }
+  .ba-media { aspect-ratio: 4 / 3.4; }
   .step { grid-template-columns: 1fr; gap: 0.75rem; }
   .footer-bottom { flex-direction: column; align-items: flex-start; }
 }
