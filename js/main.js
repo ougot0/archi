@@ -26,11 +26,16 @@
       toggle.setAttribute("aria-expanded", String(open));
       toggle.setAttribute("aria-label", open ? "Fermer le menu" : "Ouvrir le menu");
     });
+    function closeMenu() {
+      menu.classList.remove("is-open");
+      toggle.setAttribute("aria-expanded", "false");
+      toggle.setAttribute("aria-label", "Ouvrir le menu");
+    }
     menu.addEventListener("click", function (e) {
-      if (e.target.tagName === "A") {
-        menu.classList.remove("is-open");
-        toggle.setAttribute("aria-expanded", "false");
-      }
+      if (e.target.tagName === "A") closeMenu();
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && menu.classList.contains("is-open")) { closeMenu(); toggle.focus(); }
     });
   }
 
@@ -108,7 +113,7 @@
   var form = document.getElementById("contact-form");
   var status = document.getElementById("form-status");
   function setError(field, on) {
-    var w = field.closest(".field");
+    var w = field.closest(".field, .checkbox");
     if (w) w.classList.toggle("has-error", on);
   }
   if (form && status) {
@@ -126,6 +131,8 @@
       }
       if (!valid) {
         e.preventDefault();
+        var firstError = form.querySelector(".has-error input, .has-error select, .has-error textarea");
+        if (firstError) firstError.focus();
         status.textContent = "Merci de compléter les champs obligatoires.";
         status.className = "form-status is-error";
         return;
@@ -135,7 +142,7 @@
       status.className = "form-status";
     });
     form.addEventListener("input", function (e) {
-      if (e.target.closest(".field")) setError(e.target, false);
+      if (e.target.closest(".field, .checkbox")) setError(e.target, false);
     });
   }
 
