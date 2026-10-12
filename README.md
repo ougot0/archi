@@ -68,8 +68,8 @@ Pour recevoir réellement les demandes, branchez-le sur un service
 
 ## Refonte 3D
 
-- **Accueil** : séjour modélisé en 3D temps réel (Three.js r160 embarqué dans `js/vendor/`,
-  sans CDN ; scène dans `js/hero-3d.js`). La caméra suit le curseur et avance au scroll ;
+- **Accueil** : modèle 3D de l'accueil Matzav Zor (`models/matzav-zor-accueil.glb`) en temps réel
+  (Three.js r160 embarqué dans `js/vendor/`, sans CDN ; `js/hero-3d.js`). La caméra suit le curseur et avance au scroll ;
   pause hors écran ; repli sur l'image si WebGL est indisponible ; image fixe avec
   `prefers-reduced-motion`.
 - **Vue éclatée** plan → matériaux → rendu sur l'accueil, pilotée par le scroll.
@@ -79,3 +79,13 @@ Pour recevoir réellement les demandes, branchez-le sur un service
   en plein écran (clic ou Entrée, Échap pour fermer).
 - Tiny House : les 2 photos « avant » du couloir sont à fournir — remplacer les blocs
   `ba-missing` dans `projet-tiny-house.html` par des `<img>`.
+
+## Visite 3D (`visite-3d.html`)
+
+Visite à hauteur d'œil des créations : glisser pour regarder, ZQSD / WASD / flèches pour avancer
+(Maj = plus vite), toucher le sol pour s'y rendre, boutons à l'écran sur mobile, plein écran.
+Murs, verrière et mobilier bloquent le passage.
+
+**Ajouter une visite** : déposer le fichier `.glb` dans `models/`, puis ajouter une entrée dans
+`MODELS` en haut de `js/models-3d.js` (titre, image de couverture, fiche projet, point de départ
+`spawn` et direction du regard `lookAt`). Lien direct : `visite-3d.html?m=<id>#visite`.
