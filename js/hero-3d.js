@@ -38,6 +38,7 @@ async function init(hero) {
     const narrow = camera.aspect < 1;
     camera.fov = narrow ? 52 : 34;
     state.r = narrow ? h.radius + 2.5 : h.radius;
+    target.y = narrow ? h.target[1] - 0.9 : h.target[1]; // écran étroit : on remonte le modèle dans le cadre
     camera.updateProjectionMatrix();
   }
 
