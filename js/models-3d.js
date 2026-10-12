@@ -5,8 +5,24 @@
 import * as THREE from "./vendor/three.module.min.js";
 import { GLTFLoader } from "./vendor/GLTFLoader.js";
 import { RoomEnvironment } from "./vendor/RoomEnvironment.js";
+import { MeshoptDecoder } from "./vendor/meshopt_decoder.module.js";
 
 export const MODELS = [
+  {
+    id: "haussmann",
+    title: "Appartement haussmannien",
+    place: "Appartement · Paris 16e",
+    text: "Séjour et salle à manger séparés par une verrière, chambre, salle de bains, cuisine : parcourez l'appartement pièce par pièce.",
+    src: "models/haussmann.glb",
+    cover: "images/haussmann-1.jpg",
+    project: "projet-haussmann.html",
+    upAxis: "y",
+    keepMaterials: true,              // matières réglées dans le logiciel de rendu : conservées
+    spawn: [8.6, 1.62, -8.0],         // dans le séjour, face à la salle à manger
+    lookAt: [13, 1.3, -8.0],
+    // Accueil du site : vue « maquette » en coupe (tout ce qui dépasse 2,3 m est retiré).
+    hero: { target: [9.2, 0.3, -8.0], radius: 14.5, azimuth: 0.85, elevation: 0.62, clip: 2.3, free: true },
+  },
   {
     id: "matzav-zor",
     title: "Matzav Zor — l'accueil",
@@ -51,7 +67,8 @@ export async function buildScene(renderer, model, { background = "#2a2119" } = {
   const pmrem = new THREE.PMREMGenerator(renderer);
   scene.environment = pmrem.fromScene(new RoomEnvironment(renderer), 0.04).texture;
 
-  const gltf = await new GLTFLoader().parseAsync(await loadBytes(model.src), "");
+  const loader = new GLTFLoader().setMeshoptDecoder(MeshoptDecoder); // modèles compressés (gltf-transform)
+  const gltf = await loader.parseAsync(await loadBytes(model.src), "");
   const root = gltf.scene;
   if (model.upAxis === "z") root.rotation.x = -Math.PI / 2;
   scene.add(root);
@@ -61,10 +78,28 @@ export async function buildScene(renderer, model, { background = "#2a2119" } = {
   const lights = [];
 
   // Verrière : le modèle n'a que les montants ; on pose une vitre entre eux.
-  addGlass(root);
+  if (!model.keepMaterials) addGlass(root);
 
   root.traverse((o) => {
     if (!o.isMesh) return;
+    if (model.keepMaterials) {
+      // Modèle complet (matières déjà réglées dans le logiciel d'origine) : on n'y touche pas.
+      const mats = Array.isArray(o.material) ? o.material : [o.material];
+      const see = mats.some((m) => m.transparent || m.alphaTest > 0 || (m.opacity ?? 1) < 1);
+      o.castShadow = !see;
+      o.receiveShadow = true;
+      mats.forEach((m) => {
+        if (m.map) m.map.anisotropy = 8;
+        // Conversion « spéculaire » des logiciels de rendu : reflet blanc trop fort qui délave
+        // les couleurs. On revient à un reflet de matière ordinaire (bois, peinture, tissu…).
+        if (m.isMeshPhysicalMaterial) {
+          m.specularIntensity = 1;
+          m.specularColor.setRGB(1, 1, 1);
+          m.ior = 1.5;
+        }
+      });
+      return;
+    }
     o.castShadow = true;
     o.receiveShadow = true;
     const n = o.name || "";
@@ -110,36 +145,53 @@ export async function buildScene(renderer, model, { background = "#2a2119" } = {
     }
   });
 
-  // Extérieur sobre derrière la verrière : trottoir, quelques arbres.
+  // Extérieur sobre : sol, quelques arbres autour du bâtiment.
   const bounds = new THREE.Box3().setFromObject(root);
-  const ground = new THREE.Mesh(new THREE.PlaneGeometry(60, 60), new THREE.MeshStandardMaterial({ color: "#8d867c", roughness: 0.95 }));
+  const bc = bounds.getCenter(new THREE.Vector3()), bs = bounds.getSize(new THREE.Vector3());
+  if (model.keepMaterials) {
+    // Éclairage intérieur : quelques sources sous le plafond, réparties sur le plan.
+    const nx = Math.min(3, Math.max(1, Math.round(bs.x / 4))), nz = Math.min(2, Math.max(1, Math.round(bs.z / 4)));
+    for (let i = 0; i < nx; i++) for (let k = 0; k < nz; k++) {
+      const p = new THREE.PointLight("#ffe0b8", 0, Math.max(bs.x / nx, bs.z / nz) * 1.6, 1.6);
+      p.position.set(bounds.min.x + (i + 0.5) * bs.x / nx, bounds.max.y - 0.45, bounds.min.z + (k + 0.5) * bs.z / nz);
+      p.userData.base = 1.6;
+      scene.add(p);
+      lights.push(p);
+    }
+  }
+  const ground = new THREE.Mesh(new THREE.PlaneGeometry(240, 240), new THREE.MeshStandardMaterial({ color: "#8d867c", roughness: 0.95 }));
   ground.rotation.x = -Math.PI / 2;
-  ground.position.y = bounds.min.y - 0.01;
+  ground.position.set(bc.x, bounds.min.y - 0.01, bc.z);
   ground.receiveShadow = true;
   scene.add(ground);
   const leaf = new THREE.MeshStandardMaterial({ color: "#56603f", roughness: 0.85 });
   const bark = new THREE.MeshStandardMaterial({ color: "#4a3a2c", roughness: 0.9 });
-  [[-8, -3], [-9.5, 2], [-8.2, 6.5]].forEach(([x, z]) => {
+  const trees = model.keepMaterials
+    ? [[bounds.min.x - 4, bc.z - bs.z * 0.3], [bounds.min.x - 5.5, bc.z + bs.z * 0.5], [bounds.max.x + 4.5, bc.z], [bc.x - bs.x * 0.2, bounds.min.z - 4.5], [bc.x + bs.x * 0.3, bounds.max.z + 5]]
+    : [[-8, -3], [-9.5, 2], [-8.2, 6.5]];
+  trees.forEach(([x, z]) => {
     const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.16, 2.6, 10), bark);
-    trunk.position.set(x, 1.3, z);
+    trunk.position.set(x, bounds.min.y + 1.3, z);
     const crown = new THREE.Mesh(new THREE.IcosahedronGeometry(1.5, 1), leaf);
-    crown.position.set(x, 3.3, z);
+    crown.position.set(x, bounds.min.y + 3.3, z);
     crown.scale.set(1, 1.2, 1);
     [trunk, crown].forEach((m) => { m.castShadow = true; scene.add(m); });
   });
 
   const hemi = new THREE.HemisphereLight("#fff4e4", "#5a4632", 0);
   const sun = new THREE.DirectionalLight("#ffe2bd", 0);
-  sun.position.set(-12, 9, 6);
-  sun.target.position.set(0.5, 0, -1);
+  sun.position.set(bc.x - 12, bounds.min.y + 9, bc.z + 6);
+  sun.target.position.set(bc.x + 0.5, bounds.min.y, bc.z - 1);
   sun.castShadow = true;
   sun.shadow.mapSize.set(2048, 2048);
-  Object.assign(sun.shadow.camera, { left: -9, right: 9, top: 9, bottom: -9, near: 1, far: 40 });
+  const ext = Math.max(9, Math.max(bs.x, bs.z) * 0.8);
+  Object.assign(sun.shadow.camera, { left: -ext, right: ext, top: ext, bottom: -ext, near: 1, far: 60 });
   sun.shadow.bias = -0.0004;
   sun.shadow.normalBias = 0.03;
   scene.add(hemi, sun, sun.target);
 
-  const LEVELS = { hemi: 0.55, sun: 2.6 };
+  const LEVELS = model.keepMaterials ? { hemi: 0.75, sun: 1.8 } : { hemi: 0.55, sun: 2.6 };
+  if (model.keepMaterials) scene.environmentIntensity = 0.45; // matières déjà réglées : reflets plus discrets
   function setIntensity(k) {
     hemi.intensity = LEVELS.hemi * k;
     sun.intensity = LEVELS.sun * k;
@@ -147,7 +199,7 @@ export async function buildScene(renderer, model, { background = "#2a2119" } = {
   }
   setIntensity(1);
 
-  return { scene, root, bounds, colliders: colliders(root), setIntensity };
+  return { scene, root, bounds, colliders: model.keepMaterials ? null : colliders(root), setIntensity };
 }
 
 /* Le fichier est lu d'un bloc puis décodé : aucune requête secondaire.

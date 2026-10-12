@@ -21,9 +21,12 @@ async function init(hero) {
 
   const renderer = createRenderer(canvas);
   const { scene, setIntensity } = await buildScene(renderer, model);
-  const camera = new THREE.PerspectiveCamera(34, 1, 0.1, 80);
+  const camera = new THREE.PerspectiveCamera(34, 1, 0.1, 120);
 
   const h = model.hero;
+  // Vue en coupe : on retire tout ce qui dépasse une hauteur donnée (toit, plafonds).
+  if (h.clip) renderer.clippingPlanes = [new THREE.Plane(new THREE.Vector3(0, -1, 0), h.clip)];
+  if (h.free) scene.fog = null;
   const target = new THREE.Vector3(...h.target);
   const state = { az: h.azimuth, el: h.elevation, r: h.radius };
   const goal = { x: 0, y: 0 }, cur = { x: 0, y: 0 };
@@ -38,7 +41,7 @@ async function init(hero) {
     const narrow = camera.aspect < 1;
     camera.fov = narrow ? 52 : 34;
     state.r = narrow ? h.radius + 2.5 : h.radius;
-    target.y = narrow ? h.target[1] - 0.9 : h.target[1]; // écran étroit : on remonte le modèle dans le cadre
+    target.y = narrow && !h.free ? h.target[1] - 0.9 : h.target[1]; // écran étroit : on remonte le modèle dans le cadre
     camera.updateProjectionMatrix();
   }
 
@@ -50,7 +53,7 @@ async function init(hero) {
     const r = state.r - scrollP * 2.2 + (1 - ease) * 3;
     camera.position.set(
       target.x + r * Math.sin(az) * Math.cos(el),
-      Math.min(target.y + r * Math.sin(el), 3.2),
+      h.free ? target.y + r * Math.sin(el) : Math.min(target.y + r * Math.sin(el), 3.2),
       target.z + r * Math.cos(az) * Math.cos(el)
     );
     camera.lookAt(target.x, target.y + scrollP * 0.2, target.z);

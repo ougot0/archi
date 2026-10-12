@@ -89,3 +89,16 @@ Murs, verrière et mobilier bloquent le passage.
 **Ajouter une visite** : déposer le fichier `.glb` dans `models/`, puis ajouter une entrée dans
 `MODELS` en haut de `js/models-3d.js` (titre, image de couverture, fiche projet, point de départ
 `spawn` et direction du regard `lookAt`). Lien direct : `visite-3d.html?m=<id>#visite`.
+
+Les exports de logiciels de rendu (SimLab, D5, SketchUp…) sont lourds et utilisent souvent des
+matières « spéculaires » que le moteur ne lit plus. Les convertir et les compresser avant de les
+déposer (ex. l'appartement haussmannien : 51 Mo → 13 Mo) :
+
+```bash
+npx @gltf-transform/cli metalrough export.glb tmp.glb
+npx @gltf-transform/cli optimize tmp.glb models/mon-projet.glb \
+  --compress meshopt --texture-compress webp --texture-size 1024
+```
+
+Puis, dans `MODELS`, `keepMaterials: true` (matières du fichier conservées, collisions calculées
+sur la géométrie réelle) et, pour l'accueil, `hero: { …, clip: 2.3, free: true }` (vue en coupe).

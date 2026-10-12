@@ -98,6 +98,15 @@ function openViewer(viewer, model) {
     world.scene.add(marker);
     world.floor = [];
     world.root.traverse((o) => { if (o.isMesh && /floor|sol/i.test(o.name)) world.floor.push(o); });
+    if (!world.colliders) {
+      // Modèle complet : collisions et sol calculés sur la géométrie réelle (index spatial BVH).
+      world.solids = [];
+      world.root.traverse((o) => { if (o.isMesh) world.solids.push(o); }); // le verre bloque aussi le passage
+      import("./vendor/three-mesh-bvh.module.js").then(({ computeBoundsTree, acceleratedRaycast }) => {
+        world.solids.forEach((m) => { m.geometry.computeBoundsTree = computeBoundsTree; m.geometry.computeBoundsTree(); m.raycast = acceleratedRaycast; });
+        world.bvh = true;
+      });
+    }
     loading.hidden = true;
     help.hidden = false;
     canvas.focus({ preventScroll: true });
@@ -137,7 +146,13 @@ function openViewer(viewer, model) {
   function tapToWalk(e) {
     const r = canvas.getBoundingClientRect();
     ray.setFromCamera(new THREE.Vector2(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1), camera);
-    const hit = ray.intersectObjects(world.floor, false)[0];
+    let hit;
+    if (world.colliders) hit = ray.intersectObjects(world.floor, false)[0];
+    else {
+      // Premier obstacle visé : on n'y va que si c'est un sol (surface horizontale, au niveau du plancher).
+      hit = ray.intersectObjects(world.solids, false).find((h) => !isSeeThrough(h.object)); // on vise à travers les vitres
+      if (hit && (!hit.face || hit.face.normal.clone().transformDirection(hit.object.matrixWorld).y < 0.7 || hit.point.y > pos.y - eye + 0.4)) hit = null;
+    }
     if (!hit || hit.distance > 14) return;
     walkTo = hit.point.clone();
     marker.position.set(hit.point.x, hit.point.y + 0.01, hit.point.z);
@@ -181,10 +196,26 @@ function openViewer(viewer, model) {
 
   /* ---- Collisions ---- */
   const R = 0.3;
+  const probe = new THREE.Raycaster();
+  const dir = new THREE.Vector3(), from = new THREE.Vector3();
   function blocked(x, z) {
     const b = world.bounds;
     if (x < b.min.x + R || x > b.max.x - R || z < b.min.z + R || z > b.max.z - 0.2) return true;
-    return world.colliders.some((c) => x > c.min.x - R && x < c.max.x + R && z > c.min.z - R && z < c.max.z + R);
+    if (world.colliders) return world.colliders.some((c) => x > c.min.x - R && x < c.max.x + R && z > c.min.z - R && z < c.max.z + R);
+    if (!world.bvh) return false;
+    // Rayons horizontaux vers la nouvelle position, à hauteur de genou et de poitrine.
+    dir.set(x - pos.x, 0, z - pos.z);
+    const len = dir.length();
+    if (!len) return false;
+    dir.divideScalar(len);
+    const floorY = pos.y - eye;
+    for (const hgt of [0.35, 1.1]) {
+      from.set(pos.x, floorY + hgt, pos.z);
+      probe.set(from, dir);
+      probe.far = len + R;
+      if (probe.intersectObjects(world.solids, false).length) return true;
+    }
+    return false;
   }
 
   function loop() {
@@ -243,4 +274,10 @@ function openViewer(viewer, model) {
       help.hidden = true;
     },
   };
+}
+
+/* Verre, miroirs et voilages : on voit à travers, ils ne servent pas de sol pour « toucher pour aller ». */
+function isSeeThrough(mesh) {
+  const mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
+  return mats.every((m) => m.transparent && (m.opacity ?? 1) < 0.6);
 }
