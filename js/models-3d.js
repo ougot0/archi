@@ -47,7 +47,7 @@ export async function buildScene(renderer, model, { background = "#2a2119" } = {
   const pmrem = new THREE.PMREMGenerator(renderer);
   scene.environment = pmrem.fromScene(new RoomEnvironment(renderer), 0.04).texture;
 
-  const gltf = await new GLTFLoader().loadAsync(model.src);
+  const gltf = await new GLTFLoader().parseAsync(await loadBytes(model.src), "");
   const root = gltf.scene;
   if (model.upAxis === "z") root.rotation.x = -Math.PI / 2;
   scene.add(root);
@@ -130,6 +130,19 @@ export async function buildScene(renderer, model, { background = "#2a2119" } = {
   setIntensity(1);
 
   return { scene, root, bounds, colliders: colliders(root), setIntensity };
+}
+
+/* Le fichier est lu d'un bloc puis décodé : aucune requête secondaire.
+   Un modèle peut aussi être fourni encodé en base64 (« .glb.txt ») pour les
+   hébergeurs qui ne servent pas le type .glb. */
+async function loadBytes(src) {
+  const res = await fetch(src);
+  if (!res.ok) throw new Error(`${src} : ${res.status}`);
+  if (!/\.txt$/.test(src)) return res.arrayBuffer();
+  const bin = atob((await res.text()).trim());
+  const out = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
+  return out.buffer;
 }
 
 /* ---------- Matières ---------- */

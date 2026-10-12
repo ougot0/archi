@@ -741,3 +741,8 @@ img.project-hero {
   .depth-stage { --p: 1 !important; }
   * { scroll-behavior: auto !important; }
 }
+.visit-help-touch { display: none; }
+@media (hover: none) and (pointer: coarse) {
+  .visit-help-keys { display: none; }
+  .visit-help-touch { display: block; }
+}
