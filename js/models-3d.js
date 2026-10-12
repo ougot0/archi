@@ -17,6 +17,9 @@ export const MODELS = [
     project: "projet-matzav-zor.html",
     upAxis: "y",                      // "z" si le fichier est exporté avec Z vertical
     flipV: true,                      // textures à l'envers à l'export : on les retourne
+    // Façade du comptoir : marbre propre (l'image du fichier, étirée, contenait déjà le texte
+    // du logo en double) ; le logo net du modèle reste posé par-dessus.
+    cleanMarble: ["facade_marbre_comptoir"],
     spawn: [0.4, 1.62, 2.35],         // point de départ de la visite (x, hauteur des yeux, z)
     lookAt: [0, 1.25, -1.5],
     hero: { target: [-0.1, 1.35, -1.2], radius: 8.4, azimuth: 0.28, elevation: 0.1 },
@@ -65,7 +68,8 @@ export async function buildScene(renderer, model, { background = "#2a2119" } = {
     o.castShadow = true;
     o.receiveShadow = true;
     const n = o.name || "";
-    if (o.material && o.material.map) {
+    const clean = (model.cleanMarble || []).includes(n);
+    if (o.material && o.material.map && !clean) {
       // Matière texturée fournie par le modèle (marbre, sol, logos…) : on la garde.
       // Le fichier ne fournit pas de normales : on les calcule pour que la lumière s'y pose.
       if (!o.geometry.getAttribute("normal")) o.geometry.computeVertexNormals();
@@ -77,7 +81,9 @@ export async function buildScene(renderer, model, { background = "#2a2119" } = {
       g.computeVertexNormals();
       boxUV(g);
       o.geometry = g;
-      o.material = materialFor(o, tex);
+      o.material = clean
+        ? new THREE.MeshStandardMaterial({ map: tex.marble, color: "#f4efe9", roughness: 0.22, envMapIntensity: 0.9 })
+        : materialFor(o, tex);
     }
     if (GLASS.test(n)) { o.castShadow = false; o.renderOrder = 2; }
     if (LIGHT.test(n) || /logo|texture/.test(n)) o.castShadow = false;
@@ -176,9 +182,38 @@ function texturedMaterial(mesh) {
     side: THREE.DoubleSide,
     envMapIntensity: 0.7,
   });
+  m.map = src.map.clone();
   m.map.colorSpace = THREE.SRGBColorSpace;
   m.map.anisotropy = 8;
+  fitTexture(mesh.geometry, m.map, "cover");
   return m;
+}
+
+/* Respecte les proportions de l'image sur la surface (sinon le fichier l'étire) :
+   « cover » recadre au centre, « contain » montre l'image entière (logos transparents). */
+function fitTexture(g, map, mode) {
+  const p = g.getAttribute("position"), uv = g.getAttribute("uv"), img = map.image;
+  if (!p || !uv || !img || !img.width) return;
+  const find = (u, v) => {
+    for (let i = 0; i < uv.count; i++) if (Math.abs(uv.getX(i) - u) < 1e-3 && Math.abs(uv.getY(i) - v) < 1e-3) return i;
+    return -1;
+  };
+  const a = find(0, 0), b = find(1, 0), c = find(0, 1);
+  if (a < 0 || b < 0 || c < 0) return;
+  const P = (i) => new THREE.Vector3().fromBufferAttribute(p, i);
+  const surf = P(a).distanceTo(P(b)) / P(a).distanceTo(P(c));
+  const pic = img.width / img.height;
+  if (!isFinite(surf) || Math.abs(surf / pic - 1) < 0.03) return;
+  const r = surf / pic; // > 1 : surface plus allongée que l'image
+  if (mode === "cover") {
+    if (r > 1) map.repeat.set(1, 1 / r); else map.repeat.set(r, 1);
+    map.wrapS = map.wrapT = THREE.ClampToEdgeWrapping;
+  } else {
+    if (r > 1) map.repeat.set(r, 1); else map.repeat.set(1, 1 / r);
+    map.wrapS = map.wrapT = THREE.ClampToEdgeWrapping;
+  }
+  map.offset.set((1 - map.repeat.x) / 2, (1 - map.repeat.y) / 2);
+  map.needsUpdate = true;
 }
 
 /* Certains exports (trimesh) placent l'origine des UV en bas : on retourne V. */
