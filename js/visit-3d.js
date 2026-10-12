@@ -97,7 +97,7 @@ function openViewer(viewer, model) {
     world = w;
     world.scene.add(marker);
     world.floor = [];
-    world.root.traverse((o) => { if (o.isMesh && /floor/.test(o.name)) world.floor.push(o); });
+    world.root.traverse((o) => { if (o.isMesh && /floor|sol/i.test(o.name)) world.floor.push(o); });
     loading.hidden = true;
     help.hidden = false;
     canvas.focus({ preventScroll: true });

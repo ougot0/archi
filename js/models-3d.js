@@ -15,10 +15,11 @@ export const MODELS = [
     src: "models/matzav-zor-accueil.glb",
     cover: "images/matzav-3d-2.jpg",
     project: "projet-matzav-zor.html",
-    upAxis: "z",                      // export trimesh : Z vertical
-    spawn: [1.1, 1.62, 4.1],          // point de départ de la visite (x, hauteur des yeux, z)
-    lookAt: [1.1, 1.3, -2.0],
-    hero: { target: [0.9, 1.15, -1.6], radius: 8.6, azimuth: 0.5, elevation: 0.12 },
+    upAxis: "y",                      // "z" si le fichier est exporté avec Z vertical
+    flipV: true,                      // textures à l'envers à l'export : on les retourne
+    spawn: [0.4, 1.62, 2.35],         // point de départ de la visite (x, hauteur des yeux, z)
+    lookAt: [0, 1.25, -1.5],
+    hero: { target: [-0.1, 1.35, -1.2], radius: 8.4, azimuth: 0.28, elevation: 0.1 },
   },
 ];
 
@@ -56,24 +57,35 @@ export async function buildScene(renderer, model, { background = "#2a2119" } = {
   const tex = textures();
   const lights = [];
 
+  // Verrière : le modèle n'a que les montants ; on pose une vitre entre eux.
+  addGlass(root);
+
   root.traverse((o) => {
     if (!o.isMesh) return;
-    // Faces nettes + coordonnées UV en mètres (projection par face), pour poser des matières.
-    let g = o.geometry.index ? o.geometry.toNonIndexed() : o.geometry;
-    g.computeVertexNormals();
-    boxUV(g);
-    o.geometry = g;
     o.castShadow = true;
     o.receiveShadow = true;
-    o.material = materialFor(o, tex);
     const n = o.name || "";
-    if (/glazing_plane/.test(n)) { o.castShadow = false; o.renderOrder = 2; }
-    if (/light/.test(n)) o.castShadow = false;
+    if (o.material && o.material.map) {
+      // Matière texturée fournie par le modèle (marbre, sol, logos…) : on la garde.
+      // Le fichier ne fournit pas de normales : on les calcule pour que la lumière s'y pose.
+      if (!o.geometry.getAttribute("normal")) o.geometry.computeVertexNormals();
+      if (model.flipV) flipV(o.geometry);
+      o.material = texturedMaterial(o);
+    } else {
+      // Faces nettes + coordonnées UV en mètres (projection par face), pour poser des matières.
+      let g = o.geometry.index ? o.geometry.toNonIndexed() : o.geometry;
+      g.computeVertexNormals();
+      boxUV(g);
+      o.geometry = g;
+      o.material = materialFor(o, tex);
+    }
+    if (GLASS.test(n)) { o.castShadow = false; o.renderOrder = 2; }
+    if (LIGHT.test(n) || /logo|texture/.test(n)) o.castShadow = false;
   });
 
   // Lumières d'ambiance : sources réelles le long des bandeaux lumineux du modèle.
   root.traverse((o) => {
-    if (!o.isMesh || !/light/.test(o.name)) return;
+    if (!o.isMesh || !LIGHT.test(o.name)) return;
     const box = new THREE.Box3().setFromObject(o);
     const size = box.getSize(new THREE.Vector3());
     const c = box.getCenter(new THREE.Vector3());
@@ -83,10 +95,10 @@ export async function buildScene(renderer, model, { background = "#2a2119" } = {
       const p = new THREE.PointLight("#ffc98a", 0, 4.5, 2);
       p.position.set(
         size.x > size.z ? box.min.x + 0.3 + t * (size.x - 0.6) : c.x,
-        /under/.test(o.name) ? c.y + 0.05 : c.y - 0.15,
+        UNDER.test(o.name) ? c.y + 0.05 : c.y - 0.15,
         size.z >= size.x ? box.min.z + 0.3 + t * (size.z - 0.6) : c.z + 0.25
       );
-      p.userData.base = /under/.test(o.name) ? 0.9 : 2.4;
+      p.userData.base = UNDER.test(o.name) ? 0.9 : 2.4;
       scene.add(p);
       lights.push(p);
     }
@@ -145,21 +157,72 @@ async function loadBytes(src) {
   return out.buffer;
 }
 
-/* ---------- Matières ---------- */
+/* ---------- Matières ----------
+   Les noms d'éléments sont reconnus en anglais ou en français. */
+const LIGHT = /light|led/i;
+const UNDER = /under|sous/i;
+const GLASS = /glazing_plane|vitre/i;
+const DARK_METAL = /trim|frame|mullion|diagonal|seam|montant|traverse|contreventement|cadre|ornement|plinthe|pied_/i;
+
+function texturedMaterial(mesh) {
+  const src = mesh.material, n = mesh.name || "";
+  const isLogo = /logo/i.test(n);
+  const m = new THREE.MeshStandardMaterial({
+    map: src.map,
+    color: isLogo ? "#151413" : "#ffffff",
+    roughness: /marbre|marble/i.test(n) ? 0.25 : /sol|floor/i.test(n) ? 0.6 : 0.9,
+    transparent: isLogo,
+    alphaTest: isLogo ? 0.35 : 0,
+    side: THREE.DoubleSide,
+    envMapIntensity: 0.7,
+  });
+  m.map.colorSpace = THREE.SRGBColorSpace;
+  m.map.anisotropy = 8;
+  return m;
+}
+
+/* Certains exports (trimesh) placent l'origine des UV en bas : on retourne V. */
+const flipped = new WeakSet(); // un même jeu d'UV peut être partagé par plusieurs éléments
+function flipV(g) {
+  const uv = g.getAttribute("uv");
+  if (!uv || flipped.has(uv)) return;
+  for (let i = 0; i < uv.count; i++) uv.setY(i, 1 - uv.getY(i));
+  uv.needsUpdate = true;
+  flipped.add(uv);
+}
+
+function addGlass(root) {
+  const box = new THREE.Box3();
+  root.traverse((o) => { if (o.isMesh && /vitrage/i.test(o.name)) box.expandByObject(o); });
+  if (box.isEmpty()) return;
+  const size = box.getSize(new THREE.Vector3()), c = box.getCenter(new THREE.Vector3());
+  const glass = new THREE.Mesh(
+    size.x < size.z ? new THREE.BoxGeometry(0.02, size.y, size.z) : new THREE.BoxGeometry(size.x, size.y, 0.02),
+    new THREE.MeshStandardMaterial()
+  );
+  glass.name = "vitre";
+  glass.position.copy(root.worldToLocal(c.clone()));
+  root.add(glass);
+  root.updateMatrixWorld(true);
+}
+
 function materialFor(mesh, tex) {
   const n = mesh.name || "";
   const vc = mesh.geometry.getAttribute("color");
   const base = new THREE.Color(1, 1, 1);
   if (vc) base.setRGB(vc.getX(0), vc.getY(0), vc.getZ(0), THREE.SRGBColorSpace);
 
-  if (/glazing_plane/.test(n)) {
+  if (GLASS.test(n)) {
     return new THREE.MeshPhysicalMaterial({
       color: "#a9c2c6", transparent: true, opacity: 0.16, roughness: 0.05,
       metalness: 0, depthWrite: false, side: THREE.DoubleSide, envMapIntensity: 1.2,
     });
   }
-  if (/light/.test(n)) {
+  if (LIGHT.test(n)) {
     return new THREE.MeshStandardMaterial({ color: "#ffe2b8", emissive: "#ffc27a", emissiveIntensity: 3 });
+  }
+  if (/ecran/i.test(n)) {
+    return new THREE.MeshStandardMaterial({ color: "#1d1f22", roughness: 0.25, metalness: 0.3 });
   }
   if (/marble|reception_marble/.test(n)) {
     return new THREE.MeshStandardMaterial({ map: tex.marble, color: base.clone().lerp(new THREE.Color("#ffffff"), 0.35), roughness: 0.22, envMapIntensity: 0.9 });
@@ -170,7 +233,7 @@ function materialFor(mesh, tex) {
   if (n === "ceiling") {
     return new THREE.MeshStandardMaterial({ color: "#d8d0c6", roughness: 0.95 });
   }
-  if (/trim|frame|mullion|diagonal|seam/.test(n)) {
+  if (DARK_METAL.test(n)) {
     return new THREE.MeshStandardMaterial({ color: "#151515", roughness: 0.4, metalness: 0.6 });
   }
   return new THREE.MeshStandardMaterial({ color: base, roughness: 0.6 });
@@ -240,7 +303,7 @@ function boxUV(g) {
 function colliders(root) {
   const out = [];
   root.traverse((o) => {
-    if (!o.isMesh || /floor|ceiling|light|trim|seam/.test(o.name)) return;
+    if (!o.isMesh || /floor|ceiling|light|trim|seam|sol|plafond|led|logo|joint|texture|plinthe/i.test(o.name)) return;
     const b = new THREE.Box3().setFromObject(o);
     if (b.max.y < 0.3 || b.min.y > 1.9) return; // hors de la hauteur du corps
     out.push(b);
