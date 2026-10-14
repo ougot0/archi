@@ -80,8 +80,9 @@ function openViewer(viewer, model) {
 
   const camera = new THREE.PerspectiveCamera(70, 1, 0.05, 80);
   const pos = new THREE.Vector3(...model.spawn);
-  const eye = model.spawn[1];
-  const floorLevel = model.floorY || 0; // hauteur du plancher dans le modèle
+  const eyeH = model.spawn[1] - (model.floorY || 0); // hauteur des yeux au-dessus du sol
+  let floorLevel = model.floorY || 0;                  // hauteur du sol sous les pieds (change dans les escaliers)
+  let viewFloor = floorLevel;                          // version lissée pour la caméra
   const look = new THREE.Vector3(...model.lookAt).sub(pos);
   let yaw = Math.atan2(-look.x, -look.z);
   let pitch = Math.atan2(look.y, Math.hypot(look.x, look.z));
@@ -103,9 +104,11 @@ function openViewer(viewer, model) {
       // Modèle complet : collisions et sol calculés sur la géométrie réelle (index spatial BVH).
       world.solids = [];
       // Le verre bloque aussi le passage ; les portes, elles, se traversent.
-      world.root.traverse((o) => { if (o.isMesh && !isDoor(o, floorLevel)) world.solids.push(o); });
+      world.root.traverse((o) => { if (o.isMesh && !isDoor(o, model.stairs ? null : floorLevel)) world.solids.push(o); });
       import("./vendor/three-mesh-bvh.module.js").then(({ computeBoundsTree, acceleratedRaycast }) => {
-        world.solids.forEach((m) => { m.geometry.computeBoundsTree = computeBoundsTree; m.geometry.computeBoundsTree(); m.raycast = acceleratedRaycast; });
+        // Objets répétés (InstancedMesh : marches, chaises…) : la détection accélérée ne voit que
+        // le premier exemplaire, on leur laisse la détection classique.
+        world.solids.forEach((m) => { if (m.isInstancedMesh) return; m.geometry.computeBoundsTree = computeBoundsTree; m.geometry.computeBoundsTree(); m.raycast = acceleratedRaycast; });
         world.bvh = true;
       });
     }
@@ -153,7 +156,7 @@ function openViewer(viewer, model) {
     else {
       // Premier obstacle visé : on n'y va que si c'est un sol (surface horizontale, au niveau du plancher).
       hit = ray.intersectObjects(world.solids, false).find((h) => !isSeeThrough(h.object)); // on vise à travers les vitres
-      if (hit && (!hit.face || hit.face.normal.clone().transformDirection(hit.object.matrixWorld).y < 0.7 || hit.point.y > floorLevel + 0.4)) hit = null;
+      if (hit && (!hit.face || Math.abs(hit.face.normal.clone().transformDirection(hit.object.matrixWorld).y) < 0.7 || Math.abs(hit.point.y - floorLevel) > 0.6)) hit = null;
     }
     if (!hit || hit.distance > 14) return;
     walkTo = hit.point.clone();
@@ -184,6 +187,7 @@ function openViewer(viewer, model) {
   });
   viewer.querySelector("[data-visit-reset]").onclick = () => {
     pos.set(...model.spawn);
+    floorLevel = viewFloor = model.floorY || 0;
     const l = new THREE.Vector3(...model.lookAt).sub(pos);
     yaw = Math.atan2(-l.x, -l.z); pitch = Math.atan2(l.y, Math.hypot(l.x, l.z));
     walkTo = null; marker.visible = false;
@@ -205,19 +209,39 @@ function openViewer(viewer, model) {
     if (x < b.min.x + R || x > b.max.x - R || z < b.min.z + R || z > b.max.z - 0.2) return true;
     if (world.colliders) return world.colliders.some((c) => x > c.min.x - R && x < c.max.x + R && z > c.min.z - R && z < c.max.z + R);
     if (!world.bvh) return false;
+    let base = floorLevel;
+    if (model.stairs) {
+      // Plusieurs niveaux : il faut un sol à l'arrivée, ni trop haut (marche > 30 cm),
+      // ni trop bas (on ne saute pas d'une mezzanine).
+      const g = groundAt(x, z);
+      if (g === null || g > floorLevel + 0.3 || g < floorLevel - 0.8) return true; // marche ≤ 30 cm : pas sur les chaises
+      base = Math.max(floorLevel, g); // escalier raide : les rayons partent du niveau de la marche d'arrivée
+    }
     // Rayons horizontaux vers la nouvelle position, à hauteur de genou et de poitrine.
     dir.set(x - pos.x, 0, z - pos.z);
     const len = dir.length();
     if (!len) return false;
     dir.divideScalar(len);
-    const floorY = floorLevel;
-    for (const hgt of [0.35, 1.1]) {
+    const floorY = base;
+    for (const hgt of model.stairs ? [0.45, 1.1] : [0.35, 1.1]) {
       from.set(pos.x, floorY + hgt, pos.z);
       probe.set(from, dir);
-      probe.far = len + R;
+      probe.far = len + (model.stairs ? 0.2 : R); // escalier raide : on ne regarde pas trop loin devant
       if (probe.intersectObjects(world.solids, false).length) return true;
     }
     return false;
+  }
+
+  // Hauteur du sol (premier plan horizontal) sous un point, en partant juste au-dessus des pieds.
+  const down = new THREE.Vector3(0, -1, 0), _n = new THREE.Vector3();
+  function groundAt(x, z) {
+    from.set(x, floorLevel + 0.6, z);
+    probe.set(from, down);
+    probe.far = 2.2;
+    // Première surface sous les pieds (les exports ont parfois des normales fausses sur les marches :
+    // on ne s'y fie pas). Les obstacles hauts (sièges, tables) sont écartés par la limite de marche.
+    const h = probe.intersectObjects(world.solids, false)[0];
+    return h ? h.point.y : null;
   }
 
   function loop() {
@@ -255,11 +279,13 @@ function openViewer(viewer, model) {
       if (!blocked(nx, pos.z)) { pos.x = nx; moved = true; }
       if (!blocked(pos.x, nz)) { pos.z = nz; moved = true; }
       if (!moved && walkTo) { walkTo = null; marker.visible = false; }
+      if (moved && model.stairs && world.bvh) { const g = groundAt(pos.x, pos.z); if (g !== null) floorLevel = g; }
       bob += dt * 9;
     }
     marker.material.opacity = 0.55 + Math.sin(now * 0.008) * 0.25;
 
-    camera.position.set(pos.x, eye + Math.sin(bob) * 0.012, pos.z);
+    viewFloor += (floorLevel - viewFloor) * Math.min(1, dt * 10);
+    camera.position.set(pos.x, viewFloor + eyeH + Math.sin(bob) * 0.012, pos.z);
     camera.rotation.set(pitch, yaw, 0, "YXZ");
     renderer.render(world.scene, camera);
   }
@@ -296,5 +322,5 @@ function isDoor(mesh, floorY) {
   }
   _b.setFromObject(mesh).getSize(_s);
   const thin = Math.min(_s.x, _s.z), wide = Math.max(_s.x, _s.z);
-  return thin < 0.12 && wide > 0.55 && wide < 1.3 && _s.y > 1.7 && _s.y < 2.6 && _b.min.y - floorY < 0.3;
+  return thin < 0.12 && wide > 0.55 && wide < 1.3 && _s.y > 1.7 && _s.y < 2.6 && (floorY === null || _b.min.y - floorY < 0.3);
 }

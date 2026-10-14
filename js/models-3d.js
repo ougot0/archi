@@ -41,20 +41,20 @@ export const MODELS = [
   },
   {
     id: "matzav-zor",
-    title: "Matzav Zor — l'accueil",
+    title: "Matzav Zor — le restaurant",
     place: "Restaurant immersif · Nanterre",
-    text: "Comptoir en marbre clair, verrière à résille métallique noire et éclairage indirect : entrez dans l'accueil du restaurant.",
-    src: "models/matzav-zor-accueil.glb",
-    cover: "images/matzav-3d-2.jpg",
+    text: "L'accueil en marbre, la salle, la cuisine ouverte et l'étage par l'escalier : parcourez tout le restaurant, sur ses deux niveaux.",
+    src: "models/matzav-zor.glb",
+    cover: "images/matzav-3d-3.jpg",
     project: "projet-matzav-zor.html",
-    upAxis: "y",                      // "z" si le fichier est exporté avec Z vertical
-    flipV: true,                      // textures à l'envers à l'export : on les retourne
-    // Façade du comptoir : marbre propre (l'image du fichier, étirée, contenait déjà le texte
-    // du logo en double) ; le logo net du modèle reste posé par-dessus.
-    cleanMarble: ["facade_marbre_comptoir"],
-    spawn: [0.4, 1.62, 2.35],         // point de départ de la visite (x, hauteur des yeux, z)
-    lookAt: [0, 1.25, -1.5],
-    hero: { target: [-0.1, 1.35, -1.2], radius: 8.4, azimuth: 0.28, elevation: 0.1 },
+    upAxis: "y",
+    keepMaterials: true,
+    stairs: true,                     // deux niveaux : la hauteur suit le sol (escalier)
+    crop: { min: [44, -24], max: [72, 10] }, // le fichier contient aussi des copies (coupes, plans) à l'écart
+    floorY: 5.6,                      // rez-de-chaussée à 5,6 m dans le fichier (étage à 8,1 m)
+    spawn: [55.5, 7.22, -12],         // allée centrale du rez-de-chaussée, l'escalier à droite
+    lookAt: [55.5, 6.9, 0],
+    hero: { target: [57, 6, -6.5], radius: 26, azimuth: 0.9, elevation: 0.6, clip: 8.0, free: true },
   },
 ];
 
@@ -120,6 +120,8 @@ export async function buildScene(renderer, model, { background = "#2a2119" } = {
       o.receiveShadow = true;
       mats.forEach((m) => {
         if (m.map) m.map.anisotropy = 8;
+        // Faces parfois retournées à l'export : on les montre (et on les détecte) des deux côtés.
+        m.side = THREE.DoubleSide;
         // Conversion « spéculaire » des logiciels de rendu : reflet blanc trop fort qui délave
         // les couleurs. On revient à un reflet de matière ordinaire (bois, peinture, tissu…).
         if (m.isMeshPhysicalMaterial) {

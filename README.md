@@ -109,3 +109,16 @@ sur la géométrie réelle) et, pour l'accueil, `hero: { …, clip: 2.3, free: t
 **Portes** : dans la visite, un objet se traverse s'il s'appelle porte / door / poignée / charnière
 (ou si un groupe parent porte ce nom), ou s'il a la forme d'un battant (panneau fin de 0,55 à
 1,3 m de large et 1,7 à 2,6 m de haut, posé au sol). Voir `isDoor` dans `js/visit-3d.js`.
+
+**Préparation des gros exports (SimLab…)** : script `tools/prep-glb.mjs` (recadrage, portes isolées
+sous le nom `DOOR_…`, autres noms effacés), puis fusion par matière :
+
+```bash
+npx @gltf-transform/cli metalrough export.glb tmp.glb
+node tools/prep-glb.mjs tmp.glb prep.glb '{"min":[x0,z0],"max":[x1,z1]}'   # recadrage facultatif
+npx @gltf-transform/cli optimize prep.glb models/mon-projet.glb \
+  --compress meshopt --texture-compress webp --texture-size 1024 --join true --join-named false
+```
+
+Ex. Matzav Zor : 214 Mo / 6 300 objets → 10 Mo / 305 objets. **Plusieurs niveaux** : `stairs: true`
+dans `MODELS` (la hauteur suit le sol ; marche ≤ 30 cm, pas de chute de plus de 80 cm).
