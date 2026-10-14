@@ -24,6 +24,22 @@ export const MODELS = [
     hero: { target: [9.2, 0.3, -8.0], radius: 14.5, azimuth: 0.85, elevation: 0.62, clip: 2.3, free: true },
   },
   {
+    id: "tiny-house",
+    title: "Tiny House — Melun",
+    place: "Tiny house Airbnb · Melun",
+    text: "Le jardin, la cabane en red cedar ouverte sur la pelouse, la cuisine et les rangements sur mesure : faites le tour de la tiny house.",
+    src: "models/tiny-house.glb",
+    cover: "images/tiny-house.jpg",
+    project: "projet-tiny-house.html",
+    upAxis: "y",
+    keepMaterials: true,
+    crop: { min: [-7, -1], max: [30, 12] }, // le fichier contient aussi une copie « plan coupé » à l'écart
+    floorY: 0.76,                     // plancher et pelouse à 0,76 m dans le fichier
+    spawn: [16.5, 2.38, 6.0],         // dans le jardin, face à la tiny house
+    lookAt: [13.5, 1.9, 2.5],
+    hero: { target: [13, 1.2, 4], radius: 18, azimuth: 0.4, elevation: 0.55, free: true },
+  },
+  {
     id: "matzav-zor",
     title: "Matzav Zor — l'accueil",
     place: "Restaurant immersif · Nanterre",
@@ -73,6 +89,20 @@ export async function buildScene(renderer, model, { background = "#2a2119" } = {
   if (model.upAxis === "z") root.rotation.x = -Math.PI / 2;
   scene.add(root);
   root.updateMatrixWorld(true);
+
+  // Recadrage : certaines scènes contiennent d'autres choses (copie de présentation, plans
+  // posés à côté…). On ne garde que les objets dont le centre est dans la zone indiquée (x, z).
+  if (model.crop) {
+    const [x0, z0] = model.crop.min, [x1, z1] = model.crop.max;
+    const out = [], c = new THREE.Vector3();
+    root.traverse((o) => {
+      if (!o.isMesh) return;
+      new THREE.Box3().setFromObject(o).getCenter(c);
+      if (c.x < x0 || c.x > x1 || c.z < z0 || c.z > z1) out.push(o);
+    });
+    out.forEach((o) => o.parent.remove(o));
+    root.updateMatrixWorld(true);
+  }
 
   const tex = textures();
   const lights = [];
@@ -147,6 +177,10 @@ export async function buildScene(renderer, model, { background = "#2a2119" } = {
 
   // Extérieur sobre : sol, quelques arbres autour du bâtiment.
   const bounds = new THREE.Box3().setFromObject(root);
+  if (model.crop) { // emprise utile = zone recadrée (le terrain du fichier peut déborder)
+    bounds.min.x = Math.max(bounds.min.x, model.crop.min[0]); bounds.min.z = Math.max(bounds.min.z, model.crop.min[1]);
+    bounds.max.x = Math.min(bounds.max.x, model.crop.max[0]); bounds.max.z = Math.min(bounds.max.z, model.crop.max[1]);
+  }
   const bc = bounds.getCenter(new THREE.Vector3()), bs = bounds.getSize(new THREE.Vector3());
   if (model.keepMaterials) {
     // Éclairage intérieur : quelques sources sous le plafond, réparties sur le plan.

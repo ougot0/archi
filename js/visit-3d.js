@@ -81,6 +81,7 @@ function openViewer(viewer, model) {
   const camera = new THREE.PerspectiveCamera(70, 1, 0.05, 80);
   const pos = new THREE.Vector3(...model.spawn);
   const eye = model.spawn[1];
+  const floorLevel = model.floorY || 0; // hauteur du plancher dans le modèle
   const look = new THREE.Vector3(...model.lookAt).sub(pos);
   let yaw = Math.atan2(-look.x, -look.z);
   let pitch = Math.atan2(look.y, Math.hypot(look.x, look.z));
@@ -101,7 +102,8 @@ function openViewer(viewer, model) {
     if (!world.colliders) {
       // Modèle complet : collisions et sol calculés sur la géométrie réelle (index spatial BVH).
       world.solids = [];
-      world.root.traverse((o) => { if (o.isMesh) world.solids.push(o); }); // le verre bloque aussi le passage
+      // Le verre bloque aussi le passage ; les portes, elles, se traversent.
+      world.root.traverse((o) => { if (o.isMesh && !isDoor(o, floorLevel)) world.solids.push(o); });
       import("./vendor/three-mesh-bvh.module.js").then(({ computeBoundsTree, acceleratedRaycast }) => {
         world.solids.forEach((m) => { m.geometry.computeBoundsTree = computeBoundsTree; m.geometry.computeBoundsTree(); m.raycast = acceleratedRaycast; });
         world.bvh = true;
@@ -151,7 +153,7 @@ function openViewer(viewer, model) {
     else {
       // Premier obstacle visé : on n'y va que si c'est un sol (surface horizontale, au niveau du plancher).
       hit = ray.intersectObjects(world.solids, false).find((h) => !isSeeThrough(h.object)); // on vise à travers les vitres
-      if (hit && (!hit.face || hit.face.normal.clone().transformDirection(hit.object.matrixWorld).y < 0.7 || hit.point.y > pos.y - eye + 0.4)) hit = null;
+      if (hit && (!hit.face || hit.face.normal.clone().transformDirection(hit.object.matrixWorld).y < 0.7 || hit.point.y > floorLevel + 0.4)) hit = null;
     }
     if (!hit || hit.distance > 14) return;
     walkTo = hit.point.clone();
@@ -208,7 +210,7 @@ function openViewer(viewer, model) {
     const len = dir.length();
     if (!len) return false;
     dir.divideScalar(len);
-    const floorY = pos.y - eye;
+    const floorY = floorLevel;
     for (const hgt of [0.35, 1.1]) {
       from.set(pos.x, floorY + hgt, pos.z);
       probe.set(from, dir);
@@ -280,4 +282,19 @@ function openViewer(viewer, model) {
 function isSeeThrough(mesh) {
   const mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
   return mats.every((m) => m.transparent && (m.opacity ?? 1) < 0.6);
+}
+
+/* Portes : reconnues à leur nom (ou celui d'un groupe parent), ou à leur forme de battant
+   (panneau fin, 0,55 à 1,3 m de large, 1,7 à 2,6 m de haut, posé au sol). On les traverse. */
+const DOOR_NAME = /porte|door|puerta|porta|t[üu]r|charni|hinge|poign|handle|deur/i;
+const _b = new THREE.Box3(), _s = new THREE.Vector3();
+function isDoor(mesh, floorY) {
+  for (let o = mesh; o; o = o.parent) {
+    let n = o.name || "";
+    try { n = decodeURIComponent(n.replace(/=_UTF-8_Q_|_=$/g, "").replace(/=([0-9A-F]{2})/g, "%$1")); } catch (e) {}
+    if (DOOR_NAME.test(n)) return true;
+  }
+  _b.setFromObject(mesh).getSize(_s);
+  const thin = Math.min(_s.x, _s.z), wide = Math.max(_s.x, _s.z);
+  return thin < 0.12 && wide > 0.55 && wide < 1.3 && _s.y > 1.7 && _s.y < 2.6 && _b.min.y - floorY < 0.3;
 }

@@ -97,8 +97,15 @@ déposer (ex. l'appartement haussmannien : 51 Mo → 13 Mo) :
 ```bash
 npx @gltf-transform/cli metalrough export.glb tmp.glb
 npx @gltf-transform/cli optimize tmp.glb models/mon-projet.glb \
-  --compress meshopt --texture-compress webp --texture-size 1024
+  --compress meshopt --texture-compress webp --texture-size 1024 --join false --flatten false
 ```
+
+(`--join false --flatten false` garde les objets séparés et leurs noms : indispensable pour que
+les portes soient reconnues et traversables dans la visite.)
 
 Puis, dans `MODELS`, `keepMaterials: true` (matières du fichier conservées, collisions calculées
 sur la géométrie réelle) et, pour l'accueil, `hero: { …, clip: 2.3, free: true }` (vue en coupe).
+
+**Portes** : dans la visite, un objet se traverse s'il s'appelle porte / door / poignée / charnière
+(ou si un groupe parent porte ce nom), ou s'il a la forme d'un battant (panneau fin de 0,55 à
+1,3 m de large et 1,7 à 2,6 m de haut, posé au sol). Voir `isDoor` dans `js/visit-3d.js`.
