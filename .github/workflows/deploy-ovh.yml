@@ -1,0 +1,43 @@
+# Mise en ligne automatique du site sur l'hébergement OVH (SFTP).
+# Se lance à chaque envoi sur la branche du site, ou à la main depuis l'onglet « Actions ».
+# Le mot de passe FTP n'est jamais dans le code : il est lu dans le secret OVH_SFTP_PASSWORD
+# (GitHub → Settings → Secrets and variables → Actions).
+name: Mise en ligne OVH
+
+on:
+  push:
+    branches: [claude/gallant-babbage-1k6iqw]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-ovh
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Vérifier le mot de passe
+        env:
+          PASS: ${{ secrets.OVH_SFTP_PASSWORD }}
+        run: |
+          if [ -z "$PASS" ]; then
+            echo "::error::Ajoutez le secret OVH_SFTP_PASSWORD (Settings → Secrets and variables → Actions)."
+            exit 1
+          fi
+
+      - name: Préparer les fichiers du site
+        run: |
+          mkdir site
+          cp -r *.html css js images models media favicon.svg robots.txt sitemap.xml .htaccess site/
+
+      - name: Envoyer sur OVH
+        env:
+          PASS: ${{ secrets.OVH_SFTP_PASSWORD }}
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq lftp
+          lftp -c "set sftp:auto-confirm yes; set net:max-retries 3; set net:timeout 30; \
+            open -u coumaoq,$PASS sftp://ftp.cluster131.hosting.ovh.net:22; \
+            mirror --reverse --only-newer --parallel=4 --verbose site /home/coumaoq/aminteriorss"
