@@ -7,7 +7,11 @@ import { MODELS, createRenderer, buildScene } from "./models-3d.js";
 const hero = document.querySelector("[data-hero-3d]");
 const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-if (hero) {
+// Sur téléphone, la maquette temps réel (13 Mo) est remplacée par son image : la page reste
+// légère et fluide ; la visite 3D complète reste accessible par le bouton.
+const phone = window.matchMedia("(max-width: 767px)").matches;
+
+if (hero && !phone) {
   const start = () => init(hero).catch((err) => console.warn("Scène 3D désactivée :", err));
   // Le modèle n'est chargé qu'à l'approche de la section (la vidéo d'ouverture passe d'abord).
   if ("IntersectionObserver" in window) {

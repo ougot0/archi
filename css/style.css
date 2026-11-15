@@ -721,3 +721,65 @@ img.project-hero { width: 100%; height: auto; max-height: 82vh; object-fit: cont
   .visit-help-keys { display: none; }
   .visit-help-touch { display: block; }
 }
+
+/* ==========================================================================
+   Téléphone — mise en page dédiée (placée en dernier : elle a le dernier mot)
+   ========================================================================== */
+@media (max-width: 767px) {
+  .header-inner { height: 64px; }
+  main { padding-top: 64px; }
+  main.has-scrub { padding-top: 0; }
+  .nav-menu { top: 64px; max-height: calc(100svh - 64px); }
+  .logo-monogram { height: 21px; }
+
+  /* Ouverture : image verticale calée en haut, texte groupé en bas sur un voile dense */
+  .scrub-video { object-position: 50% 0; }
+  .beat, .beat--right, .beat--center {
+    align-items: flex-start; text-align: left;
+    padding: 0 1.15rem calc(1.5rem + env(safe-area-inset-bottom));
+  }
+  .beat::before, .beat--right::before, .beat--center::before {
+    background: linear-gradient(0deg, rgba(12,15,19,0.97) 0%, rgba(12,15,19,0.9) 32%, rgba(12,15,19,0.55) 52%, rgba(12,15,19,0) 68%);
+  }
+  .beat--center .rule, .beat--center .beat-sub { margin-left: 0; }
+  .beat--center .spec, .beat--center .beat-actions { justify-content: flex-start; }
+  .beat .rule { width: 80px; margin: 0.6rem 0 0.9rem; }
+  .hero-beat .rule { margin: 0 0 0.9rem; }
+  .beat-title, .hero-title { font-size: clamp(2.05rem, 9.6vw, 2.6rem); line-height: 1; }
+  .beat-sub { font-size: 0.95rem; line-height: 1.5; margin-top: 0.8rem; }
+  .hero-meta { font-size: 9.5px; letter-spacing: 0.18em; gap: 0.35rem 1rem; margin-bottom: 1rem; }
+  .hero-meta .ico { width: 12px; height: 12px; }
+  .hero-kicker, .beat-kicker { font-size: 10px; letter-spacing: 0.24em; }
+  .hero-kicker { margin-bottom: 0.6rem; }
+  .hero-cue { margin-top: 1.1rem; font-size: 10px; }
+
+  /* Cotes : une seule ligne de trois cases, compacte */
+  .spec { flex-direction: row; align-items: stretch; margin-top: 1.1rem; border-block: 1px solid var(--line); width: 100%; }
+  .spec .rule-v { display: block; }
+  .spec-cell, .spec .rule-v + .spec-cell { flex: 1; min-width: 0; padding: 0.6rem 0.6rem 0.6rem 0; border-bottom: 0; }
+  .spec .rule-v + .spec-cell { padding-left: 0.6rem; }
+  .spec-cell span { font-size: 8.5px; letter-spacing: 0.16em; margin-bottom: 0.2rem; }
+  .spec-cell strong { font-size: 0.74rem; letter-spacing: 0; display: block; overflow-wrap: anywhere; }
+  .beat-actions { margin-top: 1.1rem; gap: 0.5rem; width: 100%; }
+  .beat-actions .btn { flex: 1 1 auto; padding: 0.75rem 1rem; font-size: 0.88rem; }
+
+  /* Le bouton WhatsApp se retire pendant l'ouverture (il masquait les boutons) */
+  .wa-float { width: 46px; height: 46px; right: 0.8rem; bottom: calc(0.8rem + env(safe-area-inset-bottom)); transition: opacity 0.3s, transform var(--transition); }
+  .wa-float svg { width: 22px; height: 22px; }
+  body.in-scrub .wa-float { opacity: 0; pointer-events: none; }
+
+  /* Rythme général plus serré */
+  .section { padding-block: clamp(3rem, 12vw, 4rem); }
+  .section-head { margin-bottom: 2rem; }
+  .section-title { font-size: clamp(1.8rem, 8vw, 2.3rem); }
+  .page-head { padding-block: 2.6rem 2rem; }
+  .page-head h1 { font-size: clamp(2.3rem, 11vw, 3rem); }
+  .hero--3d { min-height: 82svh; }
+  .hero-inner { padding-inline: 1.15rem; }
+  .container { padding-inline: 1.15rem; }
+  .feature { padding: 1.5rem 1.25rem; }
+  .project-body { padding: 1.2rem 1.25rem 1.35rem; }
+  .depth-stage { height: 320px; }
+  .visit-band-media span { font-size: 0.85rem; padding: 0.65rem 1.1rem; }
+  .cookie-banner { left: 0.6rem; right: 0.6rem; bottom: calc(0.6rem + env(safe-area-inset-bottom)); padding: 1rem 1.1rem; }
+}

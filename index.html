@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="preload" href="media/blueprint.mp4" as="video" type="video/mp4" />
+  <link rel="preload" href="media/m/f000.jpg" as="image" media="(max-width: 767px)" />
   <link rel="stylesheet" href="css/style.css" />
   <meta property="og:type" content="website" />
   <meta property="og:title" content="AM Interiors — Conception d'intérieur, plans &amp; visualisation 3D" />
@@ -66,9 +66,7 @@
     <!-- 1. OUVERTURE : le plan se dessine au défilement (vidéo pilotée par le scroll) -->
     <section class="scrub" id="accueil" data-scrub aria-label="Du plan à l'espace : un appartement haussmannien se dessine">
       <div class="scrub-sticky">
-        <video class="scrub-video" data-scrub-video muted playsinline preload="auto" poster="images/blueprint-poster.jpg" aria-hidden="true">
-          <source src="media/blueprint.mp4" type="video/mp4" />
-        </video>
+        <video class="scrub-video" data-scrub-video data-src="media/blueprint.mp4" muted playsinline preload="auto" poster="images/blueprint-poster.jpg" aria-hidden="true"></video>
         <div class="scrub-grid" aria-hidden="true"></div>
         <div class="scrub-scrim" aria-hidden="true"></div>
         <div class="beat hero-beat is-active" data-beat="Accueil">
@@ -132,7 +130,7 @@
       <div class="container hero-inner">
         <p class="eyebrow reveal">La maquette · temps réel</p>
         <h2 class="section-title reveal">Tournez autour du projet.</h2>
-        <p class="hero-lead reveal">La même maquette, en direct : bougez la souris, faites défiler, puis entrez dans l'appartement pour le visiter à hauteur d'œil.</p>
+        <p class="hero-lead reveal">La maquette de l'appartement, en 3D. Entrez-y et visitez-le à hauteur d'œil, pièce par pièce, sur ordinateur comme sur téléphone.</p>
         <div class="hero-actions reveal">
           <a href="visite-3d.html?m=haussmann#visite" class="btn btn-primary"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg> Visiter l'appartement</a>
           <a href="contact.html" class="btn btn-ghost">Parler de votre projet</a>
