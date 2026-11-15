@@ -26,7 +26,15 @@ Fichiers communs : `css/style.css`, `js/main.js`, `favicon.svg`,
 
 ## Fonctionnalités
 
-- Design sobre et contemporain (blanc cassé, noyer, accent terracotta), grandes images.
+- Direction artistique « planche à dessin » : fond encre `#0c0f13`, une seule couleur
+  d'accent gris acier `#9aa4ae`, Inter Tight (titres, texte) + IBM Plex Mono (annotations),
+  traits tirés, quadrillage, grain, boutons en verre (`.liquid-glass`).
+- **Ouverture de l'accueil pilotée par le défilement** (`js/scrub.js`) : la vidéo
+  `media/blueprint.mp4` n'est jamais lue toute seule, c'est le scroll qui la fait avancer
+  (le plan de l'appartement haussmannien se trace, bascule en 3D puis prend ses matières).
+  Quatre « temps » de texte s'affichent un à un ; rail de progression à droite sur grand écran.
+  La vidéo est encodée image par image (`-g 1`) pour que les sauts soient fluides ; elle a été
+  rendue depuis `models/haussmann.glb` (arêtes du modèle, puis rendu réel).
 - Menu mobile, apparition au scroll, compteurs, filtres de projets, accordéon FAQ.
 - Bouton **WhatsApp** flottant + numéro cliquable.
 - **Bandeau cookies** (choix mémorisé) et pages **RGPD / mentions légales**.

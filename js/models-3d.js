@@ -75,7 +75,7 @@ export function createRenderer(canvas) {
 }
 
 /* ---------- Chargement + habillage ---------- */
-export async function buildScene(renderer, model, { background = "#2a2119" } = {}) {
+export async function buildScene(renderer, model, { background = "#2a2119", studio = false } = {}) {
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(background);
   scene.fog = new THREE.Fog(background, 14, 40);
@@ -195,7 +195,7 @@ export async function buildScene(renderer, model, { background = "#2a2119" } = {
       lights.push(p);
     }
   }
-  const ground = new THREE.Mesh(new THREE.PlaneGeometry(240, 240), new THREE.MeshStandardMaterial({ color: "#8d867c", roughness: 0.95 }));
+  const ground = new THREE.Mesh(new THREE.PlaneGeometry(240, 240), new THREE.MeshStandardMaterial({ color: studio ? "#14181d" : "#8d867c", roughness: 0.95 }));
   ground.rotation.x = -Math.PI / 2;
   ground.position.set(bc.x, bounds.min.y - 0.01, bc.z);
   ground.receiveShadow = true;
@@ -205,7 +205,8 @@ export async function buildScene(renderer, model, { background = "#2a2119" } = {
   const trees = model.keepMaterials
     ? [[bounds.min.x - 4, bc.z - bs.z * 0.3], [bounds.min.x - 5.5, bc.z + bs.z * 0.5], [bounds.max.x + 4.5, bc.z], [bc.x - bs.x * 0.2, bounds.min.z - 4.5], [bc.x + bs.x * 0.3, bounds.max.z + 5]]
     : [[-8, -3], [-9.5, 2], [-8.2, 6.5]];
-  trees.forEach(([x, z]) => {
+  // Mode « studio » (maquette sur fond encre de l'accueil) : pas d'arbres.
+  if (!studio) trees.forEach(([x, z]) => {
     const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.16, 2.6, 10), bark);
     trunk.position.set(x, bounds.min.y + 1.3, z);
     const crown = new THREE.Mesh(new THREE.IcosahedronGeometry(1.5, 1), leaf);

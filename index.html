@@ -3,13 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0c0f13" />
   <title>AM Interiors — Architecte d'intérieur à Levallois-Perret &amp; Paris | Conception, plans &amp; rendus 3D</title>
   <meta name="description" content="Conception d'intérieur, plans et visualisation 3D pour particuliers et professionnels. Appartements, maisons, commerces, restaurants et bureaux à Levallois-Perret — Paris &amp; Hauts-de-Seine." />
   <link rel="canonical" href="https://aminteriorss.com/" />
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="preload" href="media/blueprint.mp4" as="video" type="video/mp4" />
   <link rel="stylesheet" href="css/style.css" />
   <meta property="og:type" content="website" />
   <meta property="og:title" content="AM Interiors — Conception d'intérieur, plans &amp; visualisation 3D" />
@@ -44,39 +46,96 @@
   <header class="site-header" id="top">
     <div class="container header-inner">
       <a href="index.html" class="logo" aria-label="AM Interiors, accueil">
-        <img class="logo-monogram" src="images/monogram.png" alt="AM" /><span class="logo-word">AM Interiors</span>
+        <img class="logo-monogram" src="images/monogram.png" alt="AM" /><span class="logo-word">AM Interiors</span><span class="logo-tag">/ Architecture d'intérieur</span>
       </a>
       <nav class="nav" aria-label="Navigation principale">
-        <button class="nav-toggle" aria-expanded="false" aria-controls="nav-menu" aria-label="Ouvrir le menu">
-          <span></span><span></span><span></span>
-        </button>
+        <button class="nav-toggle" aria-expanded="false" aria-controls="nav-menu" aria-label="Ouvrir le menu"><svg class="ico ico-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="18" y2="18"/></svg><svg class="ico ico-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
         <ul class="nav-menu" id="nav-menu"><li><a href="index.html">Accueil</a></li>
           <li><a href="projets.html">Projets</a></li>
           <li><a href="visite-3d.html">Visite 3D</a></li>
           <li><a href="services.html">Services</a></li>
           <li><a href="a-propos.html">À propos</a></li>
           <li><a href="tarifs.html">Tarifs</a></li>
-          <li><a href="contact.html">Contact</a></li><li><a href="contact.html" class="nav-cta">Parler de votre projet</a></li>
+          <li><a href="contact.html">Contact</a></li><li><a href="contact.html" class="nav-cta"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.376 3.622a1 1 0 0 1 3.002 3.002L7.368 18.635a2 2 0 0 1-.855.506l-2.872.838a.5.5 0 0 1-.62-.62l.838-2.872a2 2 0 0 1 .506-.854z"/></svg>Parler de votre projet</a></li>
         </ul>
       </nav>
     </div>
   </header>
 
-  <main id="main">
-    <!-- 1. HERO -->
-    <section class="hero hero--3d" id="accueil" data-hero-3d data-hero-model="haussmann">
-      <div class="hero-bg" role="img" aria-label="Salle du restaurant Matzav Zor, rendu 3D — projet AM Interiors" style="background-image: linear-gradient(180deg, rgba(21,17,12,0.45) 0%, rgba(21,17,12,0.82) 100%), url('images/matzav-3d-3.jpg');"></div>
+  <main id="main" class="has-scrub">
+    <!-- 1. OUVERTURE : le plan se dessine au défilement (vidéo pilotée par le scroll) -->
+    <section class="scrub" id="accueil" data-scrub aria-label="Du plan à l'espace : un appartement haussmannien se dessine">
+      <div class="scrub-sticky">
+        <video class="scrub-video" data-scrub-video muted playsinline preload="auto" poster="images/blueprint-poster.jpg" aria-hidden="true">
+          <source src="media/blueprint.mp4" type="video/mp4" />
+        </video>
+        <div class="scrub-grid" aria-hidden="true"></div>
+        <div class="scrub-scrim" aria-hidden="true"></div>
+        <div class="beat hero-beat is-active" data-beat="Accueil">
+          <div class="beat-inner">
+            <p class="hero-meta el" style="animation-delay:300ms"><span><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.41 2.41 0 0 1 0-3.4l2.6-2.6a2.41 2.41 0 0 1 3.4 0Z"/><path d="m14.5 12.5 2-2"/><path d="m11.5 9.5 2-2"/><path d="m8.5 6.5 2-2"/><path d="m17.5 15.5 2-2"/></svg>Échelle 1:50</span><span><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 7 8.7 2.7a2.41 2.41 0 0 0-3.4 0L2.7 5.3a2.41 2.41 0 0 0 0 3.4L7 13"/><path d="m8 6 2-2"/><path d="m18 16 2-2"/><path d="m17 11 4.3 4.3c.94.94.94 2.46 0 3.4l-2.6 2.6c-.94.94-2.46.94-3.4 0L11 17"/><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg>Planche 01 / 05</span><span><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/><path d="M20 3v4"/><path d="M22 5h-4"/><path d="M4 17v2"/><path d="M5 18H3"/></svg>Ind. A</span></p>
+            <div class="rule" aria-hidden="true"></div>
+            <p class="hero-kicker el" style="animation-delay:380ms">AM Interiors / Architecture d'intérieur</p>
+            <h1 class="hero-title el" style="animation-delay:450ms"><span>Dessiné</span> avant d'être construit.</h1>
+            <p class="beat-sub el" style="animation-delay:560ms">Architecture intérieure, optimisation d'espaces, plans 2D et visualisation 3D. Basé à Levallois-Perret, projets à Paris, dans les Hauts-de-Seine et à distance.</p>
+            <p class="hero-cue el" style="animation-delay:680ms">Faites défiler, le plan se trace <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m7 6 5 5 5-5"/><path d="m7 13 5 5 5-5"/></svg></p>
+          </div>
+        </div>
+        <div class="beat beat--left" data-beat="Le relevé">
+          <div class="beat-inner">
+            <p class="beat-kicker el">01 · Le relevé</p>
+            <div class="rule" aria-hidden="true"></div>
+            <h2 class="beat-title el" style="animation-delay:200ms">Une page blanche.</h2>
+            <p class="beat-sub el" style="animation-delay:320ms">Tout commence par l'existant : les mesures, les contraintes, vos usages et votre budget. Rien n'est encore dessiné, tout reste possible.</p>
+            <div class="spec el" style="animation-delay:440ms"><div class="spec-cell"><span>Relevé</span><strong>sur place</strong></div><span class="rule-v" aria-hidden="true"></span><div class="spec-cell"><span>Besoins</span><strong>listés</strong></div><span class="rule-v" aria-hidden="true"></span><div class="spec-cell"><span>Traits</span><strong>0</strong></div></div>
+          </div>
+        </div>
+        <div class="beat beat--right" data-beat="Le plan">
+          <div class="beat-inner">
+            <p class="beat-kicker el">02 · Le plan</p>
+            <div class="rule" aria-hidden="true"></div>
+            <h2 class="beat-title el" style="animation-delay:200ms">Les lignes trouvent leur ordre.</h2>
+            <p class="beat-sub el" style="animation-delay:320ms">Murs, circulations, implantation du mobilier : le plan 2D organise chaque mètre carré avant le moindre coup de marteau.</p>
+            <div class="spec el" style="animation-delay:440ms"><div class="spec-cell"><span>Échelle</span><strong>1:50</strong></div><span class="rule-v" aria-hidden="true"></span><div class="spec-cell"><span>Plans</span><strong>existant &amp; projeté</strong></div><span class="rule-v" aria-hidden="true"></span><div class="spec-cell"><span>Cotes</span><strong>au cm</strong></div></div>
+          </div>
+        </div>
+        <div class="beat beat--left" data-beat="Le volume">
+          <div class="beat-inner">
+            <p class="beat-kicker el">03 · Le volume</p>
+            <div class="rule" aria-hidden="true"></div>
+            <h2 class="beat-title el" style="animation-delay:200ms">Le plan prend du relief.</h2>
+            <p class="beat-sub el" style="animation-delay:320ms">La maquette 3D révèle les hauteurs, la lumière et les matières : on comprend l'espace avant même d'y entrer.</p>
+            <div class="spec el" style="animation-delay:440ms"><div class="spec-cell"><span>Maquette</span><strong>3D</strong></div><span class="rule-v" aria-hidden="true"></span><div class="spec-cell"><span>Matières</span><strong>réelles</strong></div><span class="rule-v" aria-hidden="true"></span><div class="spec-cell"><span>Vues</span><strong>photoréalistes</strong></div></div>
+          </div>
+        </div>
+        <div class="beat beat--center" data-beat="Le projet">
+          <div class="beat-inner">
+            <p class="beat-kicker el">04 · Le projet</p>
+            <div class="rule" aria-hidden="true"></div>
+            <h2 class="beat-title el" style="animation-delay:200ms">Des espaces pensés pour être <span>vécus</span>.</h2>
+            <p class="beat-sub el" style="animation-delay:320ms">Plans, rendus HD et références produits : un dossier complet, coté et vérifié, pour passer du dessin au chantier.</p>
+            <div class="spec el" style="animation-delay:440ms"><div class="spec-cell"><span>Dossier</span><strong>complet</strong></div><span class="rule-v" aria-hidden="true"></span><div class="spec-cell"><span>Visite</span><strong>en 3D</strong></div><span class="rule-v" aria-hidden="true"></span><div class="spec-cell"><span>Projets</span><strong>5</strong></div></div>
+            <div class="beat-actions">
+              <a href="projets.html" class="btn btn-primary el" style="animation-delay:560ms">Découvrir les projets <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
+              <a href="visite-3d.html?m=haussmann#visite" class="btn btn-ghost el" style="animation-delay:680ms"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg> Visiter en 3D</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <div class="scrub-rail" data-scrub-rail aria-hidden="true"><div class="scrub-rail-track"><div class="scrub-rail-fill" data-scrub-fill></div></div><span class="scrub-rail-label" data-scrub-label>Accueil</span></div>
+
+    <!-- 2. LA MAQUETTE EN TEMPS RÉEL -->
+    <section class="hero hero--3d" id="maquette" data-hero-3d data-hero-model="haussmann">
+      <div class="hero-bg" role="img" aria-label="Séjour de l'appartement haussmannien, rendu 3D — projet AM Interiors" style="background-image: linear-gradient(180deg, rgba(12,15,19,0.4) 0%, rgba(12,15,19,0.85) 100%), url('images/haussmann-1.jpg');"></div>
       <div class="hero-veil" aria-hidden="true"></div>
       <div class="container hero-inner">
-        <p class="eyebrow eyebrow--light reveal">AM Interiors · Interior Design</p>
-        <h1 class="hero-title reveal">Des espaces pensés <br />pour être vécus.</h1>
-        <p class="hero-lead reveal">
-          Architecture intérieure, optimisation d'espaces, plans 2D et visualisation 3D.
-        </p>
-        <p class="hero-sub reveal">Basé à Levallois-Perret, projets à Paris, dans les Hauts-de-Seine et à distance.</p>
+        <p class="eyebrow reveal">La maquette · temps réel</p>
+        <h2 class="section-title reveal">Tournez autour du projet.</h2>
+        <p class="hero-lead reveal">La même maquette, en direct : bougez la souris, faites défiler, puis entrez dans l'appartement pour le visiter à hauteur d'œil.</p>
         <div class="hero-actions reveal">
-          <a href="projets.html" class="btn btn-primary">Découvrir les projets</a>
-          <a href="contact.html" class="btn btn-light">Parler de votre projet</a>
+          <a href="visite-3d.html?m=haussmann#visite" class="btn btn-primary"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg> Visiter l'appartement</a>
+          <a href="contact.html" class="btn btn-ghost">Parler de votre projet</a>
         </div>
       </div>
       <p class="hero-3d-hint"><span class="hero-3d-dot" aria-hidden="true"></span>Appartement haussmannien — maquette 3D temps réel · <a href="visite-3d.html?m=haussmann#visite">Visiter en 3D →</a></p>
@@ -231,10 +290,10 @@
           <p class="section-sub">Vous savez à chaque étape où en est votre projet.</p>
         </header>
         <div class="steps">
-          <div class="step reveal"><span class="step-num">1</span><div><h3>Premier échange</h3><p>Vous me présentez votre logement ou votre local, vos besoins, votre budget et vos délais.</p></div></div>
-          <div class="step reveal"><span class="step-num">2</span><div><h3>Collecte &amp; proposition</h3><p>Je réunis plans, dimensions et inspirations, puis je vous transmets une proposition (mission, livrables, prix, délai).</p></div></div>
-          <div class="step reveal"><span class="step-num">3</span><div><h3>Conception &amp; 3D</h3><p>Analyse, implantation, concept, matériaux et modélisation. Vous découvrez plans, moodboard et vues 3D.</p></div></div>
-          <div class="step reveal"><span class="step-num">4</span><div><h3>Présentation &amp; livraison</h3><p>Ajustements puis remise du dossier final : plans, rendus HD et références produits.</p></div></div>
+          <div class="step reveal"><span class="step-num">01</span><div><h3>Premier échange</h3><p>Vous me présentez votre logement ou votre local, vos besoins, votre budget et vos délais.</p></div></div>
+          <div class="step reveal"><span class="step-num">02</span><div><h3>Collecte &amp; proposition</h3><p>Je réunis plans, dimensions et inspirations, puis je vous transmets une proposition (mission, livrables, prix, délai).</p></div></div>
+          <div class="step reveal"><span class="step-num">03</span><div><h3>Conception &amp; 3D</h3><p>Analyse, implantation, concept, matériaux et modélisation. Vous découvrez plans, moodboard et vues 3D.</p></div></div>
+          <div class="step reveal"><span class="step-num">04</span><div><h3>Présentation &amp; livraison</h3><p>Ajustements puis remise du dossier final : plans, rendus HD et références produits.</p></div></div>
         </div>
         <p class="reveal" style="margin-top:2rem;"><a href="a-propos.html" class="btn btn-ghost">Découvrir mon approche</a></p>
       </div>
@@ -307,6 +366,7 @@
   </div>
 
   <script src="js/main.js" defer></script>
+  <script src="js/scrub.js" defer></script>
   <script type="module" src="js/hero-3d.js"></script>
 </body>
 </html>

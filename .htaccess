@@ -5,6 +5,7 @@
   AddType model/gltf-binary .glb
   AddType image/webp .webp
   AddType image/svg+xml .svg
+  AddType video/mp4 .mp4
 </IfModule>
 
 # Compression des fichiers texte (pages, styles, scripts)
@@ -24,4 +25,5 @@
   ExpiresByType image/webp "access plus 30 days"
   ExpiresByType image/svg+xml "access plus 30 days"
   ExpiresByType model/gltf-binary "access plus 30 days"
+  ExpiresByType video/mp4 "access plus 30 days"
 </IfModule>

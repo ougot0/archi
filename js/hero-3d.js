@@ -1,4 +1,4 @@
-/* AM Interiors — Hero de l'accueil : modèle 3D temps réel (accueil Matzav Zor).
+/* AM Interiors — Maquette de l'accueil : modèle 3D temps réel (appartement haussmannien).
    La caméra tourne doucement autour du modèle en suivant le curseur et avance au scroll.
    Repli : si WebGL ou le modèle est indisponible, l'image de fond du hero reste affichée. */
 import * as THREE from "./vendor/three.module.min.js";
@@ -8,7 +8,12 @@ const hero = document.querySelector("[data-hero-3d]");
 const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 if (hero) {
-  init(hero).catch((err) => console.warn("Scène 3D désactivée :", err));
+  const start = () => init(hero).catch((err) => console.warn("Scène 3D désactivée :", err));
+  // Le modèle n'est chargé qu'à l'approche de la section (la vidéo d'ouverture passe d'abord).
+  if ("IntersectionObserver" in window) {
+    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { io.disconnect(); start(); } }, { rootMargin: "800px 0px" });
+    io.observe(hero);
+  } else start();
 }
 
 async function init(hero) {
@@ -20,7 +25,7 @@ async function init(hero) {
   hero.prepend(canvas);
 
   const renderer = createRenderer(canvas);
-  const { scene, setIntensity } = await buildScene(renderer, model);
+  const { scene, setIntensity } = await buildScene(renderer, model, { background: "#0c0f13", studio: true });
   const camera = new THREE.PerspectiveCamera(34, 1, 0.1, 120);
 
   const h = model.hero;
@@ -68,7 +73,8 @@ async function init(hero) {
   });
   hero.addEventListener("pointerleave", () => { goal.x = 0; goal.y = 0; });
   window.addEventListener("scroll", () => {
-    scrollP = Math.min(Math.max(window.scrollY / (hero.offsetHeight || 1), 0), 1);
+    const r = hero.getBoundingClientRect();
+    scrollP = Math.min(Math.max(-r.top / (r.height || 1), 0), 1);
   }, { passive: true });
 
   let visible = true, raf = 0;

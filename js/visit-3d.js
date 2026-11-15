@@ -94,7 +94,7 @@ function openViewer(viewer, model) {
   marker.rotation.x = -Math.PI / 2;
   marker.visible = false;
 
-  buildScene(renderer, model, { background: "#d9d1c4" }).then((w) => {
+  buildScene(renderer, model, { background: "#cfd4d9" }).then((w) => {
     if (!alive) return;
     world = w;
     world.scene.add(marker);
