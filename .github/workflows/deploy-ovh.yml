@@ -35,9 +35,10 @@ jobs:
 
       - name: Envoyer sur OVH
         env:
-          PASS: ${{ secrets.OVH_SFTP_PASSWORD }}
+          LFTP_PASSWORD: ${{ secrets.OVH_SFTP_PASSWORD }}
         run: |
           sudo apt-get update -qq && sudo apt-get install -y -qq lftp
-          lftp -c "set sftp:auto-confirm yes; set net:max-retries 3; set net:timeout 30; \
-            open -u coumaoq,$PASS sftp://ftp.cluster131.hosting.ovh.net:22; \
-            mirror --reverse --only-newer --parallel=4 --verbose site /home/coumaoq/aminteriorss"
+          # Le mot de passe passe par la variable LFTP_PASSWORD (--env-password) :
+          # aucun caractère spécial ne peut casser la commande.
+          lftp -e "set sftp:auto-confirm yes; set net:max-retries 3; set net:timeout 30; mirror --reverse --parallel=4 --verbose site /home/coumaoq/aminteriorss; bye" \
+            --env-password -u coumaoq sftp://ftp.cluster131.hosting.ovh.net:22
